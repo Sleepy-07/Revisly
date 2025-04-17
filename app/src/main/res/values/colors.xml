@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+
+    <color name="chipbackground">#e7e0e8</color>
+
+    <color name="antiquewhite">#faebd7</color>
+    <color name="puce">#cc8899</color>
+
+    <color name="blue">#5ACCE5</color>
+    <color name="P_grey">#605F5F</color>
+
+    <color name="ivorywhite">#fffcef</color>
+    <color name="coolteal">#5c899d</color>
+
+
+    <color name="P_blue">#52a3ff</color>
+
+
+    <color name="soft_bage">#efebe0</color>
+    <color name="muted_tan">#b19079</color>
+
+</resources>

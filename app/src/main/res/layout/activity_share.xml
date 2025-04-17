@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:background="@android:color/transparent"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    tools:context=".ShareActivity">
+
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:layout_gravity="center"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="20dp"
+        android:visibility="visible" />
+
+
+
+
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="20dp"
+                android:layout_height="wrap_content"
+                android:elevation="0dp"
+                app:strokeWidth="1dp"
+                android:background="@color/white"
+                android:id="@+id/DataCard"
+                android:layout_marginHorizontal="16dp"
+                app:strokeColor="#CBCBCB"
+                android:visibility="visible"
+                app:cardCornerRadius="14dp">
+
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:padding="16dp">
+
+                    <ImageView
+                        android:layout_width="85dp"
+                        android:layout_height="80dp"
+                        android:background="@drawable/thumnail_view"
+                        android:layout_alignParentEnd="true"
+
+                        android:id="@+id/SaveThumbnails"/>
+
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="16dp"
+
+                        android:textSize="14sp"
+                        android:textColor="@color/black"
+                        android:maxLines="3"
+                        android:id="@+id/SaveTitle"
+                        android:layout_toStartOf="@+id/SaveThumbnails"
+                        android:layout_alignParentStart="true"/>
+
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="16dp"
+                        android:textSize="10sp"
+                        android:textColor="@color/P_grey"
+                        android:layout_marginTop="3dp"
+                        android:id="@+id/SaveSource"
+                        android:gravity="center_vertical"
+                        android:drawablePadding="3dp"
+
+                        android:layout_toStartOf="@+id/SaveThumbnails"
+                        android:layout_below="@+id/SaveTitle"
+                        android:layout_alignParentStart="true"/>
+
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/textInputLayout"
+                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/SaveThumbnails"
+                        android:layout_alignParentStart="true"
+                        android:layout_alignParentEnd="true"
+                        android:layout_marginTop="3dp"
+                        android:hint="leave Note">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/SaveNote"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/black"
+                            android:textSize="12sp" />
+
+
+                    </com.google.android.material.textfield.TextInputLayout>
+
+
+                    <com.google.android.material.button.MaterialButton
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/textInputLayout"
+                        android:layout_marginTop="7dp"
+                        android:backgroundTint="@color/coolteal"
+                        android:text="Save"
+                        android:textColor="@color/white"
+                        android:textSize="14sp"
+                        app:cornerRadius="9dp"
+                        android:visibility="gone"
+                        android:id="@+id/btnsave"
+                        />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                </RelativeLayout>
+
+
+            </com.google.android.material.card.MaterialCardView>
+
+
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
