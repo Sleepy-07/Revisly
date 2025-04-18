@@ -2,224 +2,229 @@
 <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-
+    android:background="@color/thumcard"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <LinearLayout
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:scrollbars="none"
+        android:fillViewport="true">
 
-        <com.google.android.material.appbar.AppBarLayout
+
+
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:elevation="0dp"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
 
-            >
-
-            <androidx.appcompat.widget.Toolbar
-                android:layout_width="match_parent"
+            <ProgressBar
+                android:id="@+id/progressBar"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@color/white">
+                android:layout_centerInParent="true"
+                android:progressTint="@color/itemselected"
+                android:secondaryProgressTint="@color/itemselected"
+                android:layout_gravity="center"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="20dp"
+                android:visibility="visible" />
+
+
+
+
+
+
+
+
+
+
+    <com.google.android.material.card.MaterialCardView
+        android:layout_width="match_parent"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="20dp"
+        android:layout_height="wrap_content"
+        android:elevation="0dp"
+        app:strokeWidth="1dp"
+        android:background="@color/white"
+        android:id="@+id/DataCard"
+        android:layout_marginHorizontal="16dp"
+        app:strokeColor="@color/cardstroke"
+        android:visibility="gone"
+        app:cardCornerRadius="14dp">
+
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <TextView
+                android:id="@+id/textView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="serif"
+                android:text="Enter Your Pin Data"
+                android:textColor="@color/black"
+                android:textSize="20dp" />
+
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/ThumbCard"
+                android:layout_width="match_parent"
+                android:layout_height="120dp"
+                android:layout_below="@+id/textView"
+                android:layout_alignParentEnd="true"
+                android:layout_marginHorizontal="16dp"
+                android:layout_marginTop="8dp"
+                android:elevation="0dp"
+                android:backgroundTint="@android:color/transparent"
+                app:cardCornerRadius="8dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
+                    android:layout_height="match_parent"
+                    android:background="@drawable/thumnail_view"
+                    android:backgroundTint="@color/thumcard">
 
                     <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:src="@drawable/back2"
-                        android:id="@+id/BackDialogsave"
+                        android:id="@+id/SaveThumbnails"
+                        android:layout_width="match_parent"
+                        android:layout_height="120dp"
+                        android:layout_alignParentEnd="true"
+                        android:scaleType="centerCrop" />
 
-                        android:rotation="-90"
-                        android:layout_gravity="center"
-                        app:tint="@color/black"/>
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Add New Save"
-                        android:layout_weight="1"
-                        android:layout_gravity="center"
-                        android:gravity="center"
-                        android:textSize="20sp"
-                        android:textColor="@color/black"
-                        />
                 </LinearLayout>
 
 
-            </androidx.appcompat.widget.Toolbar>
 
 
-        </com.google.android.material.appbar.AppBarLayout>
-
-        <androidx.core.widget.NestedScrollView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior">
+            </androidx.cardview.widget.CardView>
 
 
 
 
+            <TextView
+                android:id="@+id/SaveSource"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/ThumbCard"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentEnd="true"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="16dp"
+                android:drawablePadding="3dp"
+                android:gravity="center_vertical"
+                android:text="hejkhd"
+                android:textColor="@color/black"
+                android:textSize="17sp" />
 
 
-        <com.google.android.material.card.MaterialCardView
-            android:layout_width="match_parent"
-            android:layout_marginTop="20dp"
-            android:layout_height="wrap_content"
-            android:elevation="0dp"
-            android:layout_marginBottom="20dp"
-            app:strokeWidth="1dp"
-            android:layout_marginHorizontal="16dp"
-            app:strokeColor="#CBCBCB"
-            app:cardCornerRadius="14dp"
-
-            >
-            <LinearLayout
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/textInputLayout"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical"
-                android:padding="16dp">
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/SaveSource"
 
-                <com.google.android.material.textfield.TextInputLayout
-                    android:layout_width="match_parent"
-                    android:layout_marginTop="20dp"
-                    android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentEnd="true"
+                android:layout_marginTop="8dp"
+                android:hint="Title ">
 
-                    android:hint="Enter Url "
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                    >
-
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:layout_width="match_parent"
-                        android:id="@+id/SavesUrl"
-                        android:layout_height="wrap_content"
-                        android:inputType="text"/>
-
-                </com.google.android.material.textfield.TextInputLayout>
-
-                <TextView
-                    android:id="@+id/tvAgencyType"
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/SaveTitle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
-                    android:text="Platform"
-                    android:textSize="16sp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/tilAgencyConfirmPassword" />
+                    android:textColor="@color/black"
+                    android:textSize="12sp" />
 
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/tilAgencyType"
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/textInputLayout2"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/textInputLayout"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentEnd="true"
+                android:layout_marginTop="8dp"
+                android:hint="leave Note">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/SaveNote"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/tvAgencyType">
-
-                    <AutoCompleteTextView
-                        android:id="@+id/platformselect"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:inputType="none" />
+                    android:textColor="@color/black"
+                    android:textSize="12sp" />
 
 
-                </com.google.android.material.textfield.TextInputLayout>
+            </com.google.android.material.textfield.TextInputLayout>
 
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/textInputLayout3"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/textInputLayout2"
 
-                <com.google.android.material.textfield.TextInputLayout
-                    android:layout_width="match_parent"
-                    android:layout_marginTop="20dp"
-                    android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentEnd="true"
+                android:layout_marginTop="8dp"
+                android:hint="Tags ">
 
-                    android:hint="Enter Title "
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                    >
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:layout_width="match_parent"
-                        android:id="@+id/SaveTitle"
-                        android:layout_height="wrap_content"
-                        android:inputType="text"/>
-
-                </com.google.android.material.textfield.TextInputLayout>
-
-
-                <com.google.android.material.textfield.TextInputLayout
-                    android:layout_width="match_parent"
-                    android:layout_marginTop="20dp"
-                    android:layout_height="wrap_content"
-
-                    android:hint="Enter Note (Optional) "
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                    >
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:layout_width="match_parent"
-                        android:id="@+id/SaveNote"
-                        android:layout_height="wrap_content"
-                        android:inputType="text"/>
-
-                </com.google.android.material.textfield.TextInputLayout>
-
-
-
-                <com.google.android.material.textfield.TextInputLayout
-                    android:layout_width="match_parent"
-                    android:layout_marginTop="20dp"
-                    android:layout_height="wrap_content"
-
-                    android:hint="Enter Tags"
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                    >
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:layout_width="match_parent"
-                        android:id="@+id/SaveTags"
-                        android:layout_height="wrap_content"
-                        android:inputType="text"/>
-
-                </com.google.android.material.textfield.TextInputLayout>
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Seprated by comma"
-
-                    android:id="@+id/tagsdesc"
-                    android:visibility="invisible"
-                    android:textColor="@android:color/holo_red_light"/>
-
-
-                <com.google.android.material.button.MaterialButton
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/SaveTags"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Save"
-                    android:padding="10dp"
-                    android:backgroundTint="@color/coolteal"
-                    app:cornerRadius="13dp"
-
-                    android:layout_marginTop="10dp"
-                    android:id="@+id/SaveBtn"/>
+                    android:textColor="@color/black"
+                    android:textSize="12sp" />
 
 
-
-            </LinearLayout>
-
-
-        </com.google.android.material.card.MaterialCardView>
-
-        </androidx.core.widget.NestedScrollView>
+            </com.google.android.material.textfield.TextInputLayout>
 
 
+            <com.google.android.material.button.MaterialButton
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/textInputLayout3"
+                android:layout_marginTop="7dp"
+                android:backgroundTint="@color/itemselected"
+                android:text="Save"
+                android:textColor="@color/btncolor"
+                android:textSize="14sp"
+                app:cornerRadius="9dp"
+                android:visibility="visible"
+                android:id="@+id/btnsave"
+                />
 
 
 
 
 
 
-    </LinearLayout>
 
+
+
+
+
+
+
+
+
+        </RelativeLayout>
+
+
+    </com.google.android.material.card.MaterialCardView>
+
+
+        </LinearLayout>
+
+    </androidx.core.widget.NestedScrollView>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

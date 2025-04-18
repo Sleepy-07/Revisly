@@ -1,122 +1,105 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical"
     tools:context=".Screens.HomeFragment">
 
-
-    <com.google.android.material.appbar.AppBarLayout
+    <!-- Static Header Section -->
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
->
+        android:orientation="vertical">
+
         <com.google.android.material.appbar.MaterialToolbar
             android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            app:layout_scrollFlags="scroll|enterAlways"
-            android:background="@color/coolteal">
+            android:layout_height="?attr/actionBarSize">
 
-            <LinearLayout
-                android:layout_width="match_parent"
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center">
+
+            <TextView
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:text="My Pins"
+                android:background="@drawable/selecetd_layout"
+                android:backgroundTint="@color/itemselected"
+                android:paddingVertical="6dp"
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:fontFamily="serif"
-                    android:gravity="center_horizontal"
-                    android:text="Revisly"
-                    android:textStyle="bold"
-                    android:textColor="@color/ivorywhite"
-                    android:textSize="30sp" />
+                android:paddingHorizontal="16dp"
+                android:gravity="center"
+                android:id="@+id/MyPins"
+                android:layout_marginHorizontal="5dp"
+                android:textColor="@color/black"
+                android:textSize="18dp"
+                android:fontFamily="serif"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Archievd"
+                android:id="@+id/MyArchived"
+                android:background="@drawable/unselecetd_layout"
+                android:gravity="center"
+                android:layout_marginHorizontal="5dp"
+                android:paddingVertical="6dp"
+                android:paddingHorizontal="16dp"
+
+                android:drawablePadding="7dp"
+                android:textColor="@color/black"
+                android:textSize="18dp"
+                android:fontFamily="serif"/>
 
 
-            </LinearLayout>
-
+        </LinearLayout>
 
         </com.google.android.material.appbar.MaterialToolbar>
 
-    </com.google.android.material.appbar.AppBarLayout>
+        <com.google.android.material.chip.ChipGroup
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp">
 
+            <com.google.android.material.chip.Chip
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:checked="true"
+                android:text="All"
+                android:textSize="20sp"
+                app:textEndPadding="8dp"
+                app:textStartPadding="8dp" />
 
-<!--    <androidx.core.widget.NestedScrollView-->
-<!--        android:id="@+id/nestedScrollView"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="match_parent"-->
-<!--        app:layout_behavior="@string/appbar_scrolling_view_behavior">-->
+        </com.google.android.material.chip.ChipGroup>
 
-<!--        <LinearLayout-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="match_parent"-->
-<!--            android:orientation="vertical">-->
+    </LinearLayout>
 
-<!--            <com.google.android.material.chip.ChipGroup-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_marginTop="5dp"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                >-->
-<!--                <com.google.android.material.chip.Chip-->
-<!--                    android:layout_width="wrap_content"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:text="All"-->
-<!--                    app:textStartPadding="8dp"-->
-<!--                    android:checked="true"-->
-<!--                    android:textSize="20sp"-->
-<!--                    app:textEndPadding="8dp"/>-->
-
-
-<!--            </com.google.android.material.chip.ChipGroup>-->
-
-
-
-
-
-<!--        </LinearLayout>-->
-
-
-
-
-
-<!--    </androidx.core.widget.NestedScrollView>-->
-
-
-
+    <!-- RecyclerView with margin to avoid overlapping header -->
     <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/TestPin"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/TestPin"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior"
-        tools:listitem="@layout/activity_share"/>
+        android:layout_marginTop="120dp"
+        tools:itemCount="5"
+    tools:listitem="@layout/activity_share"
 
+        android:layout_marginBottom="90dp"/>
 
+    <!-- Floating Action Button -->
     <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/AddSave"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@android:drawable/ic_input_add"
-        app:tint="@color/ivorywhite"
-        app:maxImageSize="40dp"
-        app:fabSize="normal"
-        android:id="@+id/AddSave"
         android:layout_gravity="bottom|end"
-        app:backgroundTint="@color/coolteal"
         android:layout_marginBottom="20dp"
-        android:layout_marginEnd="16dp"/>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+        android:layout_marginEnd="16dp"
+        android:src="@android:drawable/ic_input_add"
+        app:backgroundTint="@color/itemselected"
+        app:fabSize="normal"
+        app:maxImageSize="40dp"
+        app:tint="@color/ivorywhite" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

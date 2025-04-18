@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:background="@android:color/transparent"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+
+
+
+    <com.google.android.material.card.MaterialCardView
+        android:layout_width="match_parent"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="5dp"
+        android:layout_height="wrap_content"
+        android:elevation="0dp"
+        app:strokeWidth="1dp"
+        android:background="@color/white"
+        android:id="@+id/DataCard"
+        android:layout_marginHorizontal="16dp"
+        app:strokeColor="@color/cardstroke"
+        android:visibility="visible"
+        app:cardCornerRadius="14dp">
+
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:padding="16dp">
+            <androidx.cardview.widget.CardView
+                android:layout_width="115dp"
+                android:layout_height="90dp"
+                android:layout_alignParentEnd="true"
+                app:cardCornerRadius="8dp"
+                android:id="@+id/ThumbCard"
+                android:elevation="0dp">
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:src="@drawable/test1"
+                    android:background="@drawable/thumnail_view"
+                    android:scaleType="centerCrop"
+                    android:id="@+id/SaveThumbnails"/>
+
+
+
+            </androidx.cardview.widget.CardView>
+
+
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="16dp"
+                android:text="Save 2 min ago"
+                android:textSize="10sp"
+                android:textColor="@color/coolteal"
+                android:maxLines="3"
+                android:id="@+id/SaveTime"
+                android:layout_toStartOf="@+id/ThumbCard"
+                android:layout_alignParentStart="true"/>
+
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="16dp"
+                android:text="Title"
+                android:textSize="14sp"
+                android:textColor="@color/black"
+                android:layout_below="@id/SaveTime"
+                android:maxLines="3"
+                android:id="@+id/SaveTitle"
+                android:layout_toStartOf="@+id/ThumbCard"
+                android:layout_alignParentStart="true"/>
+
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="16dp"
+                android:textSize="10sp"
+                android:textColor="#D2C4C4"
+                android:layout_marginTop="3dp"
+                android:id="@+id/SaveSource"
+                android:gravity="center_vertical"
+                android:drawablePadding="3dp"
+                android:text="Source"
+                android:layout_toStartOf="@+id/ThumbCard"
+                android:layout_below="@+id/SaveTitle"
+                android:layout_alignParentStart="true"/>
+
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/ThumbCard"
+                android:layout_alignParentStart="true"
+                android:layout_marginEnd="8dp"
+                android:id="@+id/SaveNote"
+                android:layout_toStartOf="@+id/SaveFav"
+                android:maxLines="2"
+                android:text="Note"
+                android:textColor="@color/black"
+                android:textSize="12sp" />
+
+            <ImageView
+                android:id="@+id/SaveShare"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_below="@+id/ThumbCard"
+                android:layout_alignParentEnd="true"
+                android:layout_marginTop="10dp"
+                android:src="@drawable/ic_menu" />
+
+            <ImageView
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_below="@+id/ThumbCard"
+                android:id="@+id/SaveMenu"
+
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="12dp"
+                android:layout_toStartOf="@+id/SaveShare"
+                android:src="@drawable/ic_share" />
+
+            <ImageView
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_below="@+id/ThumbCard"
+                android:id="@+id/SaveFav"
+
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="12dp"
+                android:layout_toStartOf="@+id/SaveMenu"
+                android:src="@drawable/ic_favorite" />
+
+
+        </RelativeLayout>
+
+
+    </com.google.android.material.card.MaterialCardView>
+
+
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

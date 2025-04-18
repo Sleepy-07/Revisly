@@ -21,4 +21,17 @@
     <color name="soft_bage">#efebe0</color>
     <color name="muted_tan">#b19079</color>
 
+
+    <color name="cardstroke">#CBCBCB</color>
+
+
+    <color name="thumcard">#ffffff</color>
+
+    <color name="btncolor">#ffffff</color>
+
+    <color name="dialogholer">#496A7B</color>
+
+
+    <color name="itemselected">#A1D2C5</color>
+
 </resources>

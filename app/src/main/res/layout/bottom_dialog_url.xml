@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:background="@drawable/bottom_dialog_backgroun"
+    android:backgroundTint="@color/thumcard"
+    android:layout_height="300dp">
+
+    <View
+        android:layout_width="100dp"
+        android:layout_height="5dp"
+
+        android:layout_marginTop="20dp"
+        android:layout_gravity="center_horizontal"
+        android:background="@drawable/round_corner"
+        android:backgroundTint="@color/dialogholer"/>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/textInputLayout"
+
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/SaveThumbnails"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
+        app:boxCornerRadiusTopStart="15dp"
+        android:layout_marginHorizontal="16dp"
+        android:layout_marginTop="50dp"
+        android:hint="Enter Url">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/EnterUrl"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/black"
+            android:textSize="12sp" />
+
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+
+    <com.google.android.material.button.MaterialButton
+        android:layout_width="150dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/textInputLayout"
+
+        android:layout_marginTop="20dp"
+        android:backgroundTint="@color/itemselected"
+        android:text="Find"
+        android:textColor="@color/btncolor"
+        android:textSize="14sp"
+        app:cornerRadius="9dp"
+        android:visibility="visible"
+        android:id="@+id/btnurlenter"
+        />
+
+
+
+</LinearLayout>

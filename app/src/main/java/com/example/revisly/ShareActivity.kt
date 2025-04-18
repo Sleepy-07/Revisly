@@ -17,6 +17,7 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.lifecycleScope
 import com.bumptech.glide.Glide
+import com.example.revisly.RoomDatabase.Data
 import com.example.revisly.databinding.ActivityShareBinding
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -27,6 +28,10 @@ import java.io.IOException
 
 class ShareActivity : AppCompatActivity() {
     lateinit var binding: ActivityShareBinding
+
+    lateinit var db : Data
+
+
 
     val platformlist = listOf<Platform>(
         Platform("Youtube",R.drawable.youtube),
@@ -62,6 +67,8 @@ class ShareActivity : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
+
+        db= Data.getInstance(this)
 
         val window = window
 
@@ -104,11 +111,39 @@ class ShareActivity : AppCompatActivity() {
                 binding.SaveSource.setText(getSourceLink(url))
                 SetLogo(binding.SaveSource,platformname)
 
-
                 Glide.with(this@ShareActivity)
                     .load(data.thumbnail)
                     .fitCenter()
                     .into(binding.SaveThumbnails)
+
+                db.inter().InsertSave(
+                    SavesData(
+                        url = url,
+                        title = data.title,
+                        thumbnail = data.thumbnail,
+                        timestamp = System.currentTimeMillis(),
+                        tags = listOf(platformname),
+                        category = "",
+                        platform = platformname,
+                        viewed = false,
+                        favoraite = false,
+                        notes = "",
+                        archived = false,
+                    )
+                )
+                db.inter().InsertPost(Posts(
+                    img = data.thumbnail.toString()
+                ))
+
+
+
+
+
+                Toast.makeText(this@ShareActivity, "Data is added", Toast.LENGTH_SHORT).show()
+                Log.e("Data is added ", "OpenSaveLink:  $data", )
+
+
+
             }
         }
 

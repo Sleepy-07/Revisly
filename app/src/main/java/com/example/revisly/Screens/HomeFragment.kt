@@ -1,6 +1,8 @@
 package com.example.revisly.Screens
 
 import android.app.Dialog
+import android.content.res.Configuration
+import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -8,58 +10,48 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.Window
-import android.widget.ArrayAdapter
+import android.widget.ImageView
+import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.app.ActionBar
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.DefaultItemAnimator
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
+import com.bumptech.glide.Glide
+import com.example.revisly.Adapters.SavesAdapter
 import com.example.revisly.PlatFormAdapter
 import com.example.revisly.Platform
 import com.example.revisly.Metadata
 import com.example.revisly.R
-import com.example.revisly.TestingAdpter
+import com.example.revisly.Adapters.ShowPostsAdapter
+import com.example.revisly.Posts
+import com.example.revisly.RoomDatabase.Data
+import com.example.revisly.SavesData
+import com.example.revisly.ShareActivity
 import com.example.revisly.databinding.DialogEnterllinkBinding
 import com.example.revisly.databinding.FragmentHomeBinding
+import com.google.android.material.bottomsheet.BottomSheetDialog
+import com.google.android.material.button.MaterialButton
+import com.google.android.material.textfield.TextInputEditText
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import java.io.IOException
-import java.net.HttpURLConnection
-import java.net.URL
+import kotlin.text.startsWith
 
 class HomeFragment : Fragment() {
     lateinit var binding: FragmentHomeBinding
     lateinit var savebinding : DialogEnterllinkBinding
-    lateinit var testingAdpter: TestingAdpter
+    lateinit var savesAdapter: SavesAdapter
+    lateinit var db : Data
+//    val postslist = mutableListOf<SavesData>()
 
-    val imglist = listOf(
-        R.drawable.test1,
-        R.drawable.test2,
-        R.drawable.test3,
-        R.drawable.test4,
-        R.drawable.test5,
-        R.drawable.test6,
-        R.drawable.test7,
-        R.drawable.test8,
-        R.drawable.test9,
-        R.drawable.test10,
-        R.drawable.test11,
-        R.drawable.test12,
-        R.drawable.test13,
-        R.drawable.test14,
-        R.drawable.test15,
-        R.drawable.test16,
-        R.drawable.test17,
-        R.drawable.test18,
-        R.drawable.test19,
-        R.drawable.test20,
-
-
-
-    )
+   val savelist = mutableListOf<SavesData>()
 
     val platformlist = listOf<Platform>(
         Platform("Youtube",R.drawable.youtube),
@@ -78,6 +70,8 @@ class HomeFragment : Fragment() {
 
         )
 
+    private var platformname: String = ""
+    private var data = Metadata("", null, "")
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -102,43 +96,90 @@ class HomeFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
 
-        testingAdpter = TestingAdpter(imglist)
+
+        db= Data.getInstance(requireContext())
+
+        savesAdapter = SavesAdapter(savelist, click = object : SavesAdapter.OnClik{
+            override fun toggelfav(position: Int,img : ImageView) {
+                Log.e("The position is ", "toggelfav: $position", )
+                val item = savelist[position]
+                // Step 1: Animate out (shrink + fade)
+                img.animate()
+                    .scaleX(0f)
+                    .scaleY(0f)
+                    .alpha(0f)
+                    .setDuration(150)
+                    .withEndAction {
+                        // Step 2: Change the image
+                        item.favoraite = !item.favoraite
+                        img.setImageResource(
+                            if (item.favoraite) R.drawable.ic_favorite_filled else R.drawable.ic_favorite
+                        )
+
+                        // Step 3: Animate in (grow + fade)
+                        img.animate()
+                            .scaleX(1f)
+                            .scaleY(1f)
+                            .alpha(1f)
+                            .setDuration(150)
+                            .start()
+                    }
+                    .start()
+                db.inter().UpdateSave(item)
+                savesAdapter.notifyItemChanged(position)
+            }
+
+        })
+
+
+
+        binding.MyPins.setOnClickListener {
+            binding.TestPin.visibility = View.VISIBLE
+            binding.MyPins.setBackgroundResource(R.drawable.selecetd_layout)
+            binding.MyArchived.setBackgroundResource(R.drawable.unselecetd_layout)
+
+
+
+        }
+        binding.MyArchived.setOnClickListener {
+            binding.TestPin.visibility = View.GONE
+            binding.MyArchived.setBackgroundResource(R.drawable.selecetd_layout)
+            binding.MyPins.setBackgroundResource(R.drawable.unselecetd_layout)
+        }
 
 
         binding.AddSave.setOnClickListener {
-            OpenSaveLink()
+            OpenUrlDialog()
         }
 
-        SetupPlatformAdapter()
 
 
 
-        binding.TestPin.layoutManager = StaggeredGridLayoutManager(
-            2, StaggeredGridLayoutManager.VERTICAL
-        )
-        binding.TestPin.adapter = testingAdpter
-        binding.TestPin.itemAnimator = DefaultItemAnimator()
+        val isLandscape = resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
+
+        binding.TestPin.layoutManager = if (isLandscape) {
+            GridLayoutManager(requireContext(), 2)
+        } else {
+            LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
+        }
+
+        binding.TestPin.adapter = savesAdapter
+
+        GetSaves()
 
 
 
     }
 
-    private fun SetupPlatformAdapter() {
-        val adapter = PlatFormAdapter(requireContext(),platformlist){selectedplatform ->
+    private fun GetSaves() {
+        savelist.clear()
+        savelist.addAll(db.inter().GetSave())
+        Log.e("The data is added ", "GetSaves: size = ${savelist.size} and data is\n$savelist  ", )
 
-            savebinding.platformselect.setText(selectedplatform.platformname, false)
-
-            val drawable = ContextCompat.getDrawable(requireContext(), selectedplatform.platfomricon)
-            drawable?.setBounds(0, 0, 60, 60) // Resize if needed
-
-            savebinding.platformselect.setCompoundDrawables(drawable, null, null, null)
-
-            savebinding.platformselect.dismissDropDown()
-        }
-        savebinding.platformselect.setAdapter(adapter)
-
+        savesAdapter.notifyDataSetChanged()
 
     }
+
 
     companion object {
 
@@ -150,9 +191,34 @@ class HomeFragment : Fragment() {
                 }
             }
     }
+
+
+private fun HomeFragment.OpenUrlDialog() {
+    val dialog = BottomSheetDialog(requireContext())
+    dialog.setContentView(R.layout.bottom_dialog_url)
+
+    dialog.show()
+
+    dialog.apply {
+
+        val url = findViewById<TextInputEditText>(R.id.EnterUrl)
+        val findurl = findViewById<MaterialButton>(R.id.btnurlenter)
+
+
+        findurl?.setOnClickListener {
+            if(url?.text.toString().isEmpty()){
+                Toast.makeText(requireContext(), "Enter the Url to Get the Pin", Toast.LENGTH_SHORT).show()
+            }
+            else{
+                OpenSaveLink(dialog,url?.text.toString())
+            }
+        }
+    }
+
 }
 
-private fun HomeFragment.OpenSaveLink() {
+private fun HomeFragment.OpenSaveLink(btmdialog: BottomSheetDialog,url: String) {
+    btmdialog.dismiss()
     val dailog = Dialog(requireContext())
     dailog.apply {
         requestWindowFeature(Window.FEATURE_NO_TITLE)
@@ -161,72 +227,116 @@ private fun HomeFragment.OpenSaveLink() {
 
         val displayMetrics = resources.displayMetrics
         val screenWidth = displayMetrics.widthPixels
-        val screenHeight = displayMetrics.heightPixels
         val dialogWidth = (screenWidth * 0.9).toInt()
-        val dialogheight = (screenHeight * 0.8) .toInt()
 
-        window?.setLayout(dialogWidth,dialogheight)
+        window?.setLayout(dialogWidth, ActionBar.LayoutParams.WRAP_CONTENT)
 
         window?.setDimAmount(.5f)
         setCancelable(false)
 
     }
     dailog.show()
-
     savebinding.apply {
-        BackDialogsave.setOnClickListener {
-            dailog.dismiss()
-        }
-        val list = listOf(
-            SavesUrl,
-            SaveTitle,
-            SaveTags
-        )
+        val url = extractFirstUrl(url).toString()
+
+        // Use Coroutine to fetch metadata off the main thread
+        lifecycleScope.launch(Dispatchers.IO) {
+            data = fetchMetadata(url)
+
+            Log.e("Fetch Data before ", "Fetch data is : $data ")
+
+            withContext(Dispatchers.Main) {
+                progressBar.visibility = View.GONE
+                DataCard.visibility = View.VISIBLE
+                Log.e("Fetch Data ", "Fetch data is : $data ")
+
+                SaveTitle.setText(data.title)
 
 
 
 
-        SaveBtn.setOnClickListener {
-            if(SavesUrl.text.toString().isEmpty() ||
-                SaveTitle.text.toString().isEmpty() ||
-                SaveTags.text.toString().isEmpty()){
 
-                Toast.makeText(requireContext(), "Please enter the minimum information", Toast.LENGTH_SHORT).show()
-                for (i in list){
-                    if(i.text.toString().isEmpty()){
-                        i.error =  "Please enter this"
-                    }
-                }
-            }
-            else{
-                val data = mapOf(
-                    "url" to SavesUrl.text.toString(),
-                    "title" to SaveTitle.text.toString(),
-                    "note" to SaveNote.text.toString(),
-                    "tags" to SaveTags.text.toString(),
-                    "platform" to platformselect.text.toString(),
-                    "timecreated" to System.currentTimeMillis()
+//                binding.SaveNote.setText(data.type)
+                platformname = getAppNameFromUrl(url)
+                SaveSource.setText(getSourceLink(url))
+                SetLogo(SaveSource,platformname)
 
+                Glide.with(requireContext())
+                    .load(data.thumbnail)
+                    .centerCrop()
+                    .into(SaveThumbnails)
+
+    }
+            btnsave.setOnClickListener {
+                val list = mutableListOf(platformname)
+                list.addAll(splitByComma(SaveTags.text.toString()))
+
+
+
+                db.inter().InsertSave(
+                    SavesData(
+                        url = url,
+                        title = data.title,
+                        thumbnail = data.thumbnail,
+                        timestamp = System.currentTimeMillis(),
+                        tags = list,
+                        category = "",
+                        platform = platformname,
+                        viewed = false,
+                        favoraite = false,
+                        notes = SaveNote.text.toString(),
+                        archived = false,
+                    )
                 )
+                db.inter().InsertPost(Posts(
+                    img = data.thumbnail.toString()
+                ))
 
                 Toast.makeText(requireContext(), "Data is added", Toast.LENGTH_SHORT).show()
                 Log.e("Data is added ", "OpenSaveLink:  $data", )
+
                 dailog.dismiss()
-
             }
-        }
 
+}
+    }
+}
+
+    fun splitByComma(input: String): List<String> {
+        return input.split(",").map { it.trim() }.filter { it.isNotEmpty() }
     }
 
 
 
 
 
+    private fun SetLogo(text : TextView,string: String) {
+        val match = platformlist.find {
+            it.platformname.equals(string, ignoreCase = true) ||
+                    string.contains(it.platformname, ignoreCase = true)
+        }
 
-    fun fetchMetadata(url: String): Metadata {
+        val drawable = match?.let {
+            ContextCompat.getDrawable(requireContext(), it.platfomricon)
+        } ?: null  // fallback
+
+        drawable.let {
+            text.setCompoundDrawablesWithIntrinsicBounds(drawable, null, null, null)
+            text.compoundDrawablePadding = 4 // optional: space between icon and text
+
+        }
+
+    }
+
+
+    suspend fun fetchMetadata(url: String): Metadata {
+        Log.e("Documents is here ", "fetchMetadata: ", )
+
         try {
             // Fetch the webpage HTML
             val doc: Document = Jsoup.connect(url).get()
+
+            Log.e("Documents is ", "fetchMetadata: $doc", )
 
             // Extract Open Graph metadata (og:title, og:image, og:type)
             val title = doc.select("meta[property=og:title]").attr("content")
@@ -243,4 +353,56 @@ private fun HomeFragment.OpenSaveLink() {
             return Metadata("Error", null, "website")
         }
     }
+
+
+    fun getAppNameFromUrl(url: String): String {
+        val uri = Uri.parse(url)
+        val host = uri.host ?: return "Unknown"
+
+        return when {
+            "youtube.com" in host || "youtu.be" in host -> "YouTube"
+            "instagram.com" in host -> "Instagram"
+            "twitter.com" in host || "x.com" in host -> "Twitter"
+            "facebook.com" in host -> "Facebook"
+            "linkedin.com" in host -> "LinkedIn"
+            "pinterest.com" in host || "pin.it" in host -> "Pinterest"
+            "reddit.com" in host -> "Reddit"
+            "spotify.com" in host -> "Spotify"
+            "github.com" in host -> "GitHub"
+            "amazon.com" in host  || "amzn.in" in host-> "Amazon"
+            "flipkart.com" in host -> "Flipkart"
+            "play.google.com" in host -> "Play Store"
+            "steam.com" in host -> "Steam"
+            "t.me" in host || "telegram.org" in host -> "Telegram"
+            "tiktok.com" in host -> "TikTok"
+            "snapchat.com" in host -> "Snapchat"
+            else -> host.replace("www.", "").split(".")[0].capitalize()
+        }
+    }
+
+    fun getSourceLink(url: String): String {
+        return try {
+            val uri = Uri.parse(url)
+            val host = uri.host
+            if (host != null) {
+                if (!host.startsWith("www.")) {
+                    "www.$host"
+                } else {
+                    host
+                }
+            } else {
+                "Unknown"
+            }
+        } catch (e: Exception) {
+            "Invalid URL"
+        }
+    }
+
+
+    fun extractFirstUrl(text: String): String? {
+        val regex = "(https?://\\S+)".toRegex() // matches until first space
+        return regex.find(text)?.value
+    }
+
 }
+

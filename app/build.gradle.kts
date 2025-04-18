@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
+    kotlin("kapt") version "1.5.31"
 }
 
 android {
@@ -53,4 +54,19 @@ dependencies {
     implementation("org.jsoup:jsoup:1.16.1")
 
     implementation ("com.github.bumptech.glide:glide:4.16.0")
+
+
+    implementation("androidx.room:room-runtime:2.7.0")
+    implementation("androidx.room:room-ktx:2.7.0")
+
+    kapt("androidx.room:room-compiler:2.7.0")
+
+
+    implementation("androidx.recyclerview:recyclerview:1.4.0")
+    // For control over item selection of both touch and mouse driven selection
+    implementation("androidx.recyclerview:recyclerview-selection:1.1.0")
+
+
+//    implementation("com.github.stephanenicolas.android-playstore-api:1.0.0")
+
 }

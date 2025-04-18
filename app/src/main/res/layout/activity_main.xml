@@ -33,7 +33,7 @@
             android:id="@+id/bottom_bar"
             app:itemIconTint="@color/ivorywhite"
             app:labelVisibilityMode="unlabeled"
-            android:background="@color/coolteal"
+            android:background="@color/itemselected"
             app:menu="@menu/bottombar"/>
 
     </androidx.cardview.widget.CardView>

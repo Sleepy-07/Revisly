@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="white">#000000</color>
+
+
+    <color name="black">#FFFFFF</color>
+
+    <color name="thumcard">#1E1E1E</color>
+
+    <color name="cardstroke">#323131</color>
+
+
+
+    <color name="btncolor">#ffffff</color>
+
+    <color name="dialogholer">#424242</color>
+
+    <color name="itemselected">#1A76C4</color>
+
+</resources>

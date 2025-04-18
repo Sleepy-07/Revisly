@@ -7,11 +7,12 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
+import androidx.navigation.fragment.NavHostFragment
 import com.example.revisly.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
     lateinit var binding : ActivityMainBinding
-    private lateinit var navController : NavController
+     lateinit var navController : NavController
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -24,17 +25,43 @@ class MainActivity : AppCompatActivity() {
         }
 
 
-        binding.bottomBar.setOnItemSelectedListener {
-            val navControlle = findNavController(R.id.HomeContainer)
+
+        val navHostFragment = supportFragmentManager
+            .findFragmentById(R.id.HomeContainer) as NavHostFragment
+        navController = navHostFragment.navController
+
+        binding.bottomBar?.setOnItemSelectedListener {
+
+
 
             when(it.itemId){
                 (R.id.homemenu) -> {
-                    navControlle.navigate(R.id.homeFragment)
+                    navController.navigate(R.id.homeFragment)
+
+                }
+                (R.id.postmenu) -> {
+                    navController.navigate(R.id.postViewFragment)
+
 
                 }
             }
 
+
+
             return@setOnItemSelectedListener true
+        }
+
+
+//        val navControl = findNavController(R.id.HomeContainer)
+
+        binding.HomePage?.setOnClickListener {
+            navController.navigate(R.id.homeFragment)
+
+        }
+
+        binding.PostPage?.setOnClickListener {
+            navController.navigate(R.id.postViewFragment)
+
         }
 
     }

@@ -4,13 +4,6 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
 
 
-
-
-
-
-
-
-
     <style name="DialogTheme" parent="Theme.MaterialComponents.Light.NoActionBar">
         <item name="android:windowNoTitle">true</item>
         <item name="android:windowIsTranslucent">true</item>

@@ -3,8 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
-    android:background="@android:color/transparent"
     android:layout_width="match_parent"
+
     android:layout_height="wrap_content"
     tools:context=".ShareActivity">
 
@@ -29,11 +29,10 @@
                 android:layout_height="wrap_content"
                 android:elevation="0dp"
                 app:strokeWidth="1dp"
-                android:background="@color/white"
                 android:id="@+id/DataCard"
                 android:layout_marginHorizontal="16dp"
-                app:strokeColor="#CBCBCB"
-                android:visibility="visible"
+                app:strokeColor="@color/cardstroke"
+                android:visibility="gone"
                 app:cardCornerRadius="14dp">
 
 
@@ -47,6 +46,7 @@
                         android:layout_width="85dp"
                         android:layout_height="80dp"
                         android:background="@drawable/thumnail_view"
+                        android:backgroundTint="@color/thumcard"
                         android:layout_alignParentEnd="true"
 
                         android:id="@+id/SaveThumbnails"/>
@@ -108,7 +108,7 @@
                         android:layout_height="wrap_content"
                         android:layout_below="@+id/textInputLayout"
                         android:layout_marginTop="7dp"
-                        android:backgroundTint="@color/coolteal"
+                        android:backgroundTint="@color/itemselected"
                         android:text="Save"
                         android:textColor="@color/white"
                         android:textSize="14sp"

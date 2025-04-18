@@ -6,4 +6,9 @@
         android:icon="@drawable/home"
         />
 
+    <item android:id="@+id/postmenu"
+        android:title="Posts"
+        android:icon="@android:drawable/ic_menu_preferences"
+        />
+
 </menu>

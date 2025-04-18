@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".Screens.HomeFragment">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:id="@+id/linearLayout"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
+            android:orientation="vertical">
+
+            <!-- Rotated Button 1 -->
+            <TextView
+                android:id="@+id/MyPins"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="50dp"
+                android:background="@drawable/selecetd_layout"
+                android:backgroundTint="@color/itemselected"
+                android:fontFamily="serif"
+                android:gravity="center"
+                android:padding="12dp"
+                android:rotation="-90"
+                android:text="My Pins"
+                android:textColor="@color/ivorywhite" />
+
+            <!-- Rotated Button 2 -->
+            <TextView
+                android:id="@+id/MyArchived"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/unselecetd_layout"
+                android:fontFamily="serif"
+                android:gravity="center"
+
+                android:padding="12dp"
+                android:rotation="-90"
+                android:text="Archived"
+                android:textColor="@color/ivorywhite" />
+        </LinearLayout>
+
+
+        <com.google.android.material.chip.ChipGroup
+            android:id="@+id/chipGroup"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:layout_marginEnd="80dp"
+            android:layout_toEndOf="@+id/linearLayout"
+            app:chipSpacingHorizontal="10dp"
+            app:chipSpacingVertical="10dp"
+            app:selectionRequired="true"
+            app:singleLine="true"
+            app:singleSelection="true">
+
+
+            <com.google.android.material.chip.Chip
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:checked="true"
+                android:text="All"
+                android:textSize="20sp"
+                app:textEndPadding="8dp"
+                app:textStartPadding="8dp" />
+
+            <com.google.android.material.chip.Chip
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:checked="true"
+                android:text="Pinterest"
+                android:textSize="20sp"
+                app:textEndPadding="8dp"
+                app:textStartPadding="8dp" />
+
+            <com.google.android.material.chip.Chip
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:checked="true"
+                android:text="Instagram"
+                android:textSize="20sp"
+                app:textEndPadding="8dp"
+                app:textStartPadding="8dp" />
+
+            <com.google.android.material.chip.Chip
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:checked="true"
+                android:text="Youtube"
+                android:textSize="20sp"
+                app:textEndPadding="8dp"
+                app:textStartPadding="8dp" />
+
+            <com.google.android.material.chip.Chip
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:checked="true"
+                android:text="All"
+                android:textSize="20sp"
+                app:textEndPadding="8dp"
+                app:textStartPadding="8dp" />
+
+            <com.google.android.material.chip.Chip
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:checked="true"
+                android:text="Pinterest"
+                android:textSize="20sp"
+                app:textEndPadding="8dp"
+                app:textStartPadding="8dp" />
+
+            <com.google.android.material.chip.Chip
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:checked="true"
+                android:text="Instagram"
+                android:textSize="20sp"
+                app:textEndPadding="8dp"
+                app:textStartPadding="8dp" />
+
+            <com.google.android.material.chip.Chip
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:checked="true"
+                android:text="Youtube"
+                android:textSize="20sp"
+                app:textEndPadding="8dp"
+                app:textStartPadding="8dp" />
+
+        </com.google.android.material.chip.ChipGroup>
+
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/TestPin"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/chipGroup"
+
+           android:layout_marginEnd="80dp"
+            android:layout_toEndOf="@+id/linearLayout"
+            tools:itemCount="5"
+            tools:listitem="@layout/activity_share" />
+
+
+
+
+    </RelativeLayout>
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/AddSave"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_marginBottom="20dp"
+        android:layout_marginEnd="16dp"
+        android:src="@android:drawable/ic_input_add"
+        app:backgroundTint="@color/itemselected"
+        app:fabSize="normal"
+        app:maxImageSize="40dp"
+        app:tint="@color/ivorywhite" />
+    
+
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
