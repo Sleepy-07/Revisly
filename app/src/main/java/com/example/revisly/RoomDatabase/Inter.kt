@@ -12,7 +12,17 @@ import com.example.revisly.SavesData
 interface Inter {
 
     @Insert
-    fun InsertSave(data : SavesData)
+    fun InsertSa(data : SavesData)
+
+    fun InsertSave(data: SavesData) : Boolean{
+        val valid = is_ValidUrl(data.images.toString())
+        if(!valid){
+            InsertSa(data)
+            return true
+        }
+        return false
+    }
+
 
     @Delete
     fun DeleteSave(data : SavesData)
@@ -22,6 +32,21 @@ interface Inter {
 
     @Query("Select * from SavesData ")
     fun GetSave() : List<SavesData>
+
+    @Query("Select * from SavesData where url == :id ")
+    fun is_Valid(id: String) : Boolean
+
+    @Query("Select * from SavesData where images == :id ")
+    fun is_ValidUrl(id: String) : Boolean
+
+    @Query("SELECT EXISTS(SELECT 1 FROM SavesData WHERE images IN (:ids))")
+    fun isValidUrl(ids: MutableList<String>): Boolean
+
+    @Query("Select * from SavesData where type in ('Post','Pin','carousel')" )
+    fun GetSavePost() : List<SavesData>
+
+    @Query("Select * from SavesData where platform = :filter")
+    fun GetSaveFilter(filter : String) : List<SavesData>
 
     @Insert
     fun InsertPost(data : Posts)

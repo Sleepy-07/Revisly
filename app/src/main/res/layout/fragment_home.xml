@@ -27,7 +27,6 @@
                 android:layout_height="wrap_content"
                 android:text="My Pins"
                 android:background="@drawable/selecetd_layout"
-                android:backgroundTint="@color/itemselected"
                 android:paddingVertical="6dp"
 
                 android:paddingHorizontal="16dp"

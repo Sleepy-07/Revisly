@@ -24,13 +24,12 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="50dp"
                 android:background="@drawable/selecetd_layout"
-                android:backgroundTint="@color/itemselected"
                 android:fontFamily="serif"
                 android:gravity="center"
                 android:padding="12dp"
                 android:rotation="-90"
                 android:text="My Pins"
-                android:textColor="@color/ivorywhite" />
+                android:textColor="@color/black" />
 
             <!-- Rotated Button 2 -->
             <TextView
@@ -40,11 +39,11 @@
                 android:background="@drawable/unselecetd_layout"
                 android:fontFamily="serif"
                 android:gravity="center"
-
                 android:padding="12dp"
                 android:rotation="-90"
                 android:text="Archived"
-                android:textColor="@color/ivorywhite" />
+                android:textColor="@color/black" />
+
         </LinearLayout>
 
 

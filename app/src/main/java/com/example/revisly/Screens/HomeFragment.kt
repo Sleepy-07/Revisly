@@ -15,33 +15,35 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.ActionBar
 import androidx.core.content.ContextCompat
-import androidx.lifecycle.lifecycleScope
-import androidx.recyclerview.widget.DefaultItemAnimator
+import androidx.core.view.isEmpty
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.bumptech.glide.Glide
 import com.example.revisly.Adapters.SavesAdapter
-import com.example.revisly.PlatFormAdapter
+import com.example.revisly.Adapters.ViewPagerAdapter
 import com.example.revisly.Platform
 import com.example.revisly.Metadata
 import com.example.revisly.R
-import com.example.revisly.Adapters.ShowPostsAdapter
-import com.example.revisly.Posts
+import com.example.revisly.KeyData
+import com.example.revisly.Retrofit.RetrofitClient
+import com.example.revisly.Retrofit.ScrapeResponse
+import com.example.revisly.Retrofit.UrlRequest
 import com.example.revisly.RoomDatabase.Data
 import com.example.revisly.SavesData
 import com.example.revisly.ShareActivity
 import com.example.revisly.databinding.DialogEnterllinkBinding
 import com.example.revisly.databinding.FragmentHomeBinding
+import com.example.revisly.test
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.textfield.TextInputEditText
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 import java.io.IOException
+import kotlin.math.log
 import kotlin.text.startsWith
 
 class HomeFragment : Fragment() {
@@ -49,6 +51,8 @@ class HomeFragment : Fragment() {
     lateinit var savebinding : DialogEnterllinkBinding
     lateinit var savesAdapter: SavesAdapter
     lateinit var db : Data
+    lateinit var viewpgaerAdapter: ViewPagerAdapter
+    val imagelist = mutableListOf<String>()
 //    val postslist = mutableListOf<SavesData>()
 
    val savelist = mutableListOf<SavesData>()
@@ -123,13 +127,15 @@ class HomeFragment : Fragment() {
                             .alpha(1f)
                             .setDuration(150)
                             .start()
+                        db.inter().UpdateSave(item)
+                        savesAdapter.notifyItemChanged(position)
                     }
                     .start()
-                db.inter().UpdateSave(item)
-                savesAdapter.notifyItemChanged(position)
+
             }
 
         })
+
 
 
 
@@ -193,114 +199,180 @@ class HomeFragment : Fragment() {
     }
 
 
-private fun HomeFragment.OpenUrlDialog() {
-    val dialog = BottomSheetDialog(requireContext())
-    dialog.setContentView(R.layout.bottom_dialog_url)
+    fun GetItems(url: String, dialog: BottomSheetDialog) {
+        val request = UrlRequest(url = url)
 
-    dialog.show()
+        // Show progress immediately when starting the request
+        val saveDialog = createSaveDialog(url, dialog, showProgress = true)
+        saveDialog.show()
 
-    dialog.apply {
-
-        val url = findViewById<TextInputEditText>(R.id.EnterUrl)
-        val findurl = findViewById<MaterialButton>(R.id.btnurlenter)
-
-
-        findurl?.setOnClickListener {
-            if(url?.text.toString().isEmpty()){
-                Toast.makeText(requireContext(), "Enter the Url to Get the Pin", Toast.LENGTH_SHORT).show()
+        RetrofitClient.api.sendUrl(request).enqueue(object : Callback<test> {
+            override fun onResponse(
+                call: Call<test>,
+                response: Response<test>
+            ) {
+                if (response.isSuccessful) {
+                    val data = response.body()
+                    Log.d("Scraper", "Data is \n$data")
+                    val item = KeyData(true, data)
+                    updateSaveDialog(saveDialog, item, url)
+                } else {
+                    Log.e("Scraper", "Failed: ${response.errorBody()?.string()}")
+                    val item = KeyData(false, null)
+                    handleError(saveDialog, "Error: Please try again later")
+                }
             }
-            else{
-                OpenSaveLink(dialog,url?.text.toString())
+
+            override fun onFailure(call: Call<test>, t: Throwable) {
+                Log.e("Scraper", "Error: ${t.message}")
+                val item = KeyData(false, null)
+                handleError(saveDialog, "Error: Please try again later")
             }
+        })
+    }
+
+    private fun HomeFragment.createSaveDialog(
+        url: String,
+        btmdialog: BottomSheetDialog,
+        showProgress: Boolean = true
+    ): Dialog {
+        btmdialog.dismiss()
+
+        val dialog = Dialog(requireContext()).apply {
+            requestWindowFeature(Window.FEATURE_NO_TITLE)
+            setContentView(savebinding.root)
+            window?.setBackgroundDrawableResource(R.drawable.round_corner)
+
+            val displayMetrics = resources.displayMetrics
+            val screenWidth = displayMetrics.widthPixels
+            val dialogWidth = (screenWidth * 0.9).toInt()
+
+            window?.setLayout(dialogWidth, ActionBar.LayoutParams.WRAP_CONTENT)
+            window?.setDimAmount(.5f)
+            setCancelable(false)
         }
+
+        savebinding.apply {
+            progressBar.visibility = if (showProgress) View.VISIBLE else View.GONE
+            DataCard.visibility = if (showProgress) View.GONE else View.VISIBLE
+        }
+
+        return dialog
     }
 
-}
+    private fun HomeFragment.updateSaveDialog(
+        dialog: Dialog,
+        item: KeyData,
+        url: String
+    ) {
+        savebinding.apply {
+            if (item.isget) {
+                val data = item.data
+                Log.e("The data is ", "OpenSaveLink: $data")
 
-private fun HomeFragment.OpenSaveLink(btmdialog: BottomSheetDialog,url: String) {
-    btmdialog.dismiss()
-    val dailog = Dialog(requireContext())
-    dailog.apply {
-        requestWindowFeature(Window.FEATURE_NO_TITLE)
-        setContentView(savebinding.root)
-        window?.setBackgroundDrawableResource(R.drawable.round_corner)
-
-        val displayMetrics = resources.displayMetrics
-        val screenWidth = displayMetrics.widthPixels
-        val dialogWidth = (screenWidth * 0.9).toInt()
-
-        window?.setLayout(dialogWidth, ActionBar.LayoutParams.WRAP_CONTENT)
-
-        window?.setDimAmount(.5f)
-        setCancelable(false)
-
-    }
-    dailog.show()
-    savebinding.apply {
-        val url = extractFirstUrl(url).toString()
-
-        // Use Coroutine to fetch metadata off the main thread
-        lifecycleScope.launch(Dispatchers.IO) {
-            data = fetchMetadata(url)
-
-            Log.e("Fetch Data before ", "Fetch data is : $data ")
-
-            withContext(Dispatchers.Main) {
                 progressBar.visibility = View.GONE
                 DataCard.visibility = View.VISIBLE
-                Log.e("Fetch Data ", "Fetch data is : $data ")
 
-                SaveTitle.setText(data.title)
+                SaveTitle.setText(data?.title)
+                platformname = data?.platform ?: ""
+                SaveSource.setText(url)
+                imagelist.addAll((data?.images ?: emptyList()).reversed())
 
+                Log.e("Images Size", "updateSaveDialog: ${imagelist.size}", )
 
-
-
-
-//                binding.SaveNote.setText(data.type)
-                platformname = getAppNameFromUrl(url)
-                SaveSource.setText(getSourceLink(url))
-                SetLogo(SaveSource,platformname)
-
-                Glide.with(requireContext())
-                    .load(data.thumbnail)
-                    .centerCrop()
-                    .into(SaveThumbnails)
-
-    }
-            btnsave.setOnClickListener {
-                val list = mutableListOf(platformname)
-                list.addAll(splitByComma(SaveTags.text.toString()))
+                Log.e("Indiactor Images", "updateSaveDialog: is empty ${IndiactorImage.isEmpty()} ", )
+                viewpgaerAdapter = ViewPagerAdapter(imagelist)
+                SaveThumbnails.adapter = viewpgaerAdapter
+                IndiactorImage.setViewPager(SaveThumbnails)
 
 
 
-                db.inter().InsertSave(
-                    SavesData(
+                if(imagelist.size == 1) {
+                    Log.e("Images Size is less 1 ", "updateSaveDialog: ${imagelist.size}", )
+
+                    IndiactorImage.visibility = View.GONE
+                }
+
+
+
+//                Glide.with(requireContext())
+//                    .load(data?.images?.get(0))
+//                    .centerCrop()
+//                    .into()
+
+                btnsave.setOnClickListener {
+
+                   val tagss = mutableListOf(platformname)
+                    tagss.addAll(splitByComma(SaveTags.text.toString()))
+
+                    // Save logic here
+
+                    val newItem = SavesData(
                         url = url,
-                        title = data.title,
-                        thumbnail = data.thumbnail,
+                        title = data?.title,
+                        thumbnail = data?.thumbnail,
                         timestamp = System.currentTimeMillis(),
-                        tags = list,
+                        tags = tagss,
                         category = "",
                         platform = platformname,
                         viewed = false,
                         favoraite = false,
                         notes = SaveNote.text.toString(),
                         archived = false,
+                        account_name = data?.account_name,
+                        images = data?.images,
+                        type = data?.type
                     )
-                )
-                db.inter().InsertPost(Posts(
-                    img = data.thumbnail.toString()
-                ))
 
-                Toast.makeText(requireContext(), "Data is added", Toast.LENGTH_SHORT).show()
-                Log.e("Data is added ", "OpenSaveLink:  $data", )
+                    val is_valid = db.inter().InsertSave(newItem)
+                    if(is_valid){
+                        savelist.add(newItem)
+                        savesAdapter.notifyItemInserted(savelist.size-1)
+                        Toast.makeText(requireContext(), "Data is added", Toast.LENGTH_SHORT).show()
+                        Log.e("Data is added ", "OpenSaveLink:  $data", )
+                        dialog.dismiss()
+                    }
+                    else{
+                        Toast.makeText(requireContext(), "This Pin is Already Exist", Toast.LENGTH_SHORT).show()
+                    }
 
-                dailog.dismiss()
+
+
+
+
+                }
+            } else {
+                handleError(dialog, "Request submission error")
             }
-
-}
+        }
     }
-}
+
+    private fun HomeFragment.handleError(dialog: Dialog, message: String) {
+        Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
+        dialog.dismiss()
+    }
+
+    private fun HomeFragment.OpenUrlDialog() {
+        val dialog = BottomSheetDialog(requireContext())
+        dialog.setContentView(R.layout.bottom_dialog_url)
+        dialog.show()
+
+        dialog.apply {
+            val url = findViewById<TextInputEditText>(R.id.EnterUrl)
+            val findurl = findViewById<MaterialButton>(R.id.btnurlenter)
+
+            findurl?.setOnClickListener {
+                if (url?.text.toString().isEmpty()) {
+                    Toast.makeText(requireContext(),
+                        "Enter the URL to get the pin",
+                        Toast.LENGTH_SHORT).show()
+                } else {
+                    GetItems(url?.text.toString(), dialog)
+                }
+            }
+        }
+    }
+
 
     fun splitByComma(input: String): List<String> {
         return input.split(",").map { it.trim() }.filter { it.isNotEmpty() }

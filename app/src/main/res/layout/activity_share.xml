@@ -4,7 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
     android:layout_width="match_parent"
-
     android:layout_height="wrap_content"
     tools:context=".ShareActivity">
 
@@ -32,7 +31,7 @@
                 android:id="@+id/DataCard"
                 android:layout_marginHorizontal="16dp"
                 app:strokeColor="@color/cardstroke"
-                android:visibility="gone"
+                android:visibility="visible"
                 app:cardCornerRadius="14dp">
 
 
@@ -48,7 +47,7 @@
                         android:background="@drawable/thumnail_view"
                         android:backgroundTint="@color/thumcard"
                         android:layout_alignParentEnd="true"
-
+                        android:scaleType="centerCrop"
                         android:id="@+id/SaveThumbnails"/>
 
 
@@ -89,6 +88,7 @@
                         android:layout_below="@+id/SaveThumbnails"
                         android:layout_alignParentStart="true"
                         android:layout_alignParentEnd="true"
+                        android:visibility="gone"
                         android:layout_marginTop="3dp"
                         android:hint="leave Note">
 
@@ -110,10 +110,10 @@
                         android:layout_marginTop="7dp"
                         android:backgroundTint="@color/itemselected"
                         android:text="Save"
-                        android:textColor="@color/white"
+                        android:textColor="@color/black"
                         android:textSize="14sp"
                         app:cornerRadius="9dp"
-                        android:visibility="gone"
+                        android:visibility="visible"
                         android:id="@+id/btnsave"
                         />
 

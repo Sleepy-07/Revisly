@@ -1,5 +1,6 @@
 package com.example.revisly
 
+import android.app.Dialog
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
@@ -11,23 +12,36 @@ import android.view.WindowManager
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
+import androidx.appcompat.app.ActionBar
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.isEmpty
 import androidx.lifecycle.lifecycleScope
 import com.bumptech.glide.Glide
+import com.example.revisly.Adapters.ViewPagerAdapter
+import com.example.revisly.Retrofit.RetrofitClient
+import com.example.revisly.Retrofit.UrlRequest
 import com.example.revisly.RoomDatabase.Data
+import com.example.revisly.Screens.HomeFragment
 import com.example.revisly.databinding.ActivityShareBinding
+import com.google.android.material.bottomsheet.BottomSheetDialog
+import com.google.android.material.button.MaterialButton
+import com.google.android.material.textfield.TextInputEditText
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 import java.io.IOException
 
 class ShareActivity : AppCompatActivity() {
     lateinit var binding: ActivityShareBinding
+    val imagelist = mutableListOf<String>()
 
     lateinit var db : Data
 
@@ -45,9 +59,6 @@ class ShareActivity : AppCompatActivity() {
         Platform("Flipkart",R.drawable.flipkart),
         Platform("Playstore",R.drawable.playstore),
         Platform("Steam",R.drawable.steam),
-
-
-
         )
 
     private var platformname: String = ""
@@ -87,65 +98,12 @@ class ShareActivity : AppCompatActivity() {
 
 
         var url = intent.getStringExtra(Intent.EXTRA_TEXT) ?: ""
-        url = extractFirstUrl(url).toString()
-
-        // Use Coroutine to fetch metadata off the main thread
-        lifecycleScope.launch(Dispatchers.IO) {
-             data = fetchMetadata(url)
-
-            Log.e("Fetch Data before ", "Fetch data is : $data ")
-
-            withContext(Dispatchers.Main) {
-                binding.progressBar.visibility = View.GONE
-                binding.DataCard.visibility = View.VISIBLE
-                Log.e("Fetch Data ", "Fetch data is : $data ")
-
-                binding.SaveTitle.setText(data.title)
+//        url = extractFirstUrl(url).toString()
 
 
+        GetItems(url)
 
 
-
-//                binding.SaveNote.setText(data.type)
-                platformname = getAppNameFromUrl(url)
-                binding.SaveSource.setText(getSourceLink(url))
-                SetLogo(binding.SaveSource,platformname)
-
-                Glide.with(this@ShareActivity)
-                    .load(data.thumbnail)
-                    .fitCenter()
-                    .into(binding.SaveThumbnails)
-
-                db.inter().InsertSave(
-                    SavesData(
-                        url = url,
-                        title = data.title,
-                        thumbnail = data.thumbnail,
-                        timestamp = System.currentTimeMillis(),
-                        tags = listOf(platformname),
-                        category = "",
-                        platform = platformname,
-                        viewed = false,
-                        favoraite = false,
-                        notes = "",
-                        archived = false,
-                    )
-                )
-                db.inter().InsertPost(Posts(
-                    img = data.thumbnail.toString()
-                ))
-
-
-
-
-
-                Toast.makeText(this@ShareActivity, "Data is added", Toast.LENGTH_SHORT).show()
-                Log.e("Data is added ", "OpenSaveLink:  $data", )
-
-
-
-            }
-        }
 
 
 
@@ -155,37 +113,132 @@ class ShareActivity : AppCompatActivity() {
 
 
 
-            if(SaveNote.text.toString().isEmpty()){
-                btnsave.visibility = View.GONE
-            }
-            else{
-                btnsave.visibility = View.VISIBLE
-
-            }
+//            if(SaveNote.text.toString().isEmpty()){
+//                btnsave.visibility = View.GONE
+//            }
+//            else{
+//                btnsave.visibility = View.VISIBLE
+//
+//            }
 
 
         btnsave.setOnClickListener {
-
-                val data = mapOf(
-                    "url" to url,
-                    "title" to SaveTitle.text.toString(),
-                    "note" to SaveNote.text.toString(),
-                    "platform" to platformname,
-                    "thumnail" to data.thumbnail,
-                    "timecreated" to System.currentTimeMillis()
-
-                )
-
-                Toast.makeText(this@ShareActivity, "Data is added", Toast.LENGTH_SHORT).show()
-                Log.e("Data is added ", "OpenSaveLink:  $data", )
                 finish()
-
             }
         }
 
 
 
     }
+
+
+    fun GetItems(url: String) {
+        val request = UrlRequest(url = url)
+
+        // Show progress immediately when starting the request
+        binding.progressBar.visibility = View.VISIBLE
+        binding.DataCard.visibility = View.GONE
+
+        RetrofitClient.api.sendUrl(request).enqueue(object : Callback<test> {
+            override fun onResponse(
+                call: Call<test>,
+                response: Response<test>
+            ) {
+                if (response.isSuccessful) {
+                    val data = response.body()
+                    Log.d("Scraper", "Data is \n$data")
+                    val item = KeyData(true, data)
+                    updateSaveDialog( item, url)
+                } else {
+                    Log.e("Scraper", "Failed: ${response.errorBody()?.string()}")
+                    val item = KeyData(false, null)
+                    handleError( "Error: Please try again later")
+                }
+            }
+
+            override fun onFailure(call: Call<test>, t: Throwable) {
+                Log.e("Scraper", "Error: ${t.message}")
+                val item = KeyData(false, null)
+                handleError("Error: Please try again later")
+            }
+        })
+    }
+
+    private fun ShareActivity.updateSaveDialog(
+        item: KeyData,
+        url: String
+    ) {
+        binding.apply {
+            if (item.isget) {
+                val data = item.data
+                Log.e("The data is ", "OpenSaveLink: $data")
+
+                progressBar.visibility = View.GONE
+                DataCard.visibility = View.VISIBLE
+
+                SaveTitle.setText(data?.title)
+                platformname = data?.platform ?: ""
+                SaveSource.setText(url)
+                imagelist.addAll((data?.images ?: emptyList()).reversed())
+
+                Glide.with(this@ShareActivity)
+                    .load(item.data?.images?.get(0))
+                    .centerCrop()
+                    .into(SaveThumbnails)
+
+                Log.e("Images Size", "updateSaveDialog: ${imagelist.size}", )
+                val tagss = mutableListOf(platformname)
+
+
+                val newItem = SavesData(
+                    url = url,
+                    title = data?.title,
+                    thumbnail = data?.thumbnail,
+                    timestamp = System.currentTimeMillis(),
+                    tags = tagss,
+                    category = "",
+                    platform = platformname,
+                    viewed = false,
+                    favoraite = false,
+                    notes = SaveNote.text.toString(),
+                    archived = false,
+                    account_name = data?.account_name,
+                    images = data?.images,
+                    type = data?.type
+                )
+
+                val is_valid = db.inter().InsertSave(newItem)
+
+                if(!is_valid){
+                    Toast.makeText(this@ShareActivity, "This Pin is Already Exist", Toast.LENGTH_SHORT).show()
+                    finish()
+                }
+
+
+                btnsave.setOnClickListener {
+
+                    Toast.makeText(this@ShareActivity, "Data is added", Toast.LENGTH_SHORT).show()
+                    Log.e("Data is added ", "OpenSaveLink:  $data", )
+                    finish()
+
+                }
+            } else {
+                handleError( "Request submission error")
+            }
+        }
+    }
+
+    private fun ShareActivity.handleError( message: String) {
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
+       finish()
+    }
+
+
+
+    fun splitByComma(input: String): List<String> {
+        return input.split(",").map { it.trim() }.filter { it.isNotEmpty() }
+    }
+
 
     private fun SetLogo(text : TextView,string: String) {
         val match = platformlist.find {

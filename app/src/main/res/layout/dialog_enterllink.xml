@@ -2,13 +2,14 @@
 <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/thumcard"
+    android:background="@android:color/transparent"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:scrollbars="none"
+        android:background="@android:color/transparent"
         android:fillViewport="true">
 
 
@@ -16,19 +17,31 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:background="@android:color/transparent"
+
             android:orientation="vertical">
 
-            <ProgressBar
-                android:id="@+id/progressBar"
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:progressTint="@color/itemselected"
-                android:secondaryProgressTint="@color/itemselected"
-                android:layout_gravity="center"
-                android:layout_marginTop="20dp"
-                android:layout_marginBottom="20dp"
-                android:visibility="visible" />
+                android:background="@color/thumcard"
+                android:id="@+id/progressBar"
+                android:gravity="center">
+
+                <ProgressBar
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:progressTint="@color/itemselected"
+                    android:secondaryProgressTint="@color/itemselected"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginBottom="20dp"
+                    android:visibility="visible" />
+
+            </LinearLayout>
+
+
 
 
 
@@ -50,7 +63,7 @@
         android:id="@+id/DataCard"
         android:layout_marginHorizontal="16dp"
         app:strokeColor="@color/cardstroke"
-        android:visibility="gone"
+        android:visibility="visible"
         app:cardCornerRadius="14dp">
 
 
@@ -82,21 +95,29 @@
                 android:backgroundTint="@android:color/transparent"
                 app:cardCornerRadius="8dp">
 
-                <LinearLayout
+                <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:background="@drawable/thumnail_view"
                     android:backgroundTint="@color/thumcard">
 
-                    <ImageView
+                    <androidx.viewpager2.widget.ViewPager2
                         android:id="@+id/SaveThumbnails"
                         android:layout_width="match_parent"
-                        android:layout_height="120dp"
-                        android:layout_alignParentEnd="true"
-                        android:scaleType="centerCrop" />
+                        android:layout_height="match_parent"
+                        android:orientation="horizontal"/>
+
+                    <me.relex.circleindicator.CircleIndicator3
+                        android:id="@+id/IndiactorImage"
+                        android:layout_width="match_parent"
+                        android:layout_height="20dp"
+                        android:layout_alignParentBottom="true"
+                        app:ci_drawable="@drawable/selectedimg"
+                        app:ci_drawable_unselected="@drawable/unselectedimg"/>
 
 
-                </LinearLayout>
+
+                </RelativeLayout>
 
 
 

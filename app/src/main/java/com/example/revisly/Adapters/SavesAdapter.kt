@@ -69,7 +69,7 @@ class SavesAdapter(val list : MutableList<SavesData>, val click : OnClik) : Recy
             source.text = item.platform
             time.text = "save " +getTimeAgo(item.timestamp)
             Glide.with(itemView.context)
-                .load(item.thumbnail)
+                .load(item.images?.get(0))
                 .centerCrop()
                 .into(thumbnail)
 

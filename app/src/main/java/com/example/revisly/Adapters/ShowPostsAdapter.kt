@@ -14,9 +14,10 @@ import com.bumptech.glide.request.transition.Transition
 import com.example.revisly.Posts
 import com.example.revisly.R
 import com.bumptech.glide.request.target.CustomTarget
+import com.example.revisly.SavesData
 import kotlin.math.min
 
-class ShowPostsAdapter(private val list: List<Posts>) : RecyclerView.Adapter<ShowPostsAdapter.ViewHolder>() {
+class ShowPostsAdapter(private val list: List<SavesData>) : RecyclerView.Adapter<ShowPostsAdapter.ViewHolder>() {
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val img: ImageView = view.findViewById(R.id.ImageSet)
@@ -55,7 +56,7 @@ class ShowPostsAdapter(private val list: List<Posts>) : RecyclerView.Adapter<Sho
 
         Glide.with(holder.itemView.context)
             .asBitmap()
-            .load(item.img)
+            .load(item.images?.get(0))
             .into(object : CustomTarget<Bitmap>() {
                 override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
                     val originalWidth = resource.width
