@@ -1,8 +1,10 @@
 package com.example.revisly
 
+import android.os.Parcelable
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.example.revisly.Retrofit.ScrapeResponse
+import kotlinx.parcelize.Parcelize
 import java.sql.Timestamp
 
 data class Platform(
@@ -15,6 +17,7 @@ data class Metadata(
     val type: String?
 )
 
+@Parcelize
 @Entity
 data class SavesData(
     @PrimaryKey(autoGenerate = true)
@@ -33,7 +36,7 @@ data class SavesData(
     val notes : String? = "",
     val archived : Boolean = false,
     val type : String? = "",
-    )
+    ) : Parcelable
 
 @Entity
 data class Posts(
@@ -56,3 +59,12 @@ data class KeyData(
     val isget : Boolean,
     val data : test?
 )
+
+
+@Parcelize
+data class FlattenedImage(
+    val imageUrl: String,
+    val parentItem: SavesData,
+    val imageIndex: Int,
+    val itemIndex: Int
+) : Parcelable

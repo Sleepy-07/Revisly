@@ -1,5 +1,6 @@
 package com.example.revisly.Screens
 
+import android.app.AlertDialog
 import android.app.Dialog
 import android.content.res.Configuration
 import android.net.Uri
@@ -11,6 +12,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.Window
 import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.ActionBar
@@ -39,6 +41,7 @@ import com.google.android.material.button.MaterialButton
 import com.google.android.material.textfield.TextInputEditText
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
+import org.jsoup.nodes.Range
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -142,6 +145,7 @@ class HomeFragment : Fragment() {
                     val item = savelist[postion]
                     val img = findViewById<ImageView>(R.id.SaveThumbnailsExtra)
                     val title = findViewById<TextView>(R.id.SaveTextExtra)
+                    val delete = findViewById<LinearLayout>(R.id.DeleteSave)
 
                     Glide.with(requireContext())
                         .load(item.images?.get(0))
@@ -149,6 +153,13 @@ class HomeFragment : Fragment() {
                         .into(img!!)
 
                     title?.text = item.title
+
+                    delete?.setOnClickListener {
+                        showDeleteConfirmationDialog(postion,dailog) {
+
+                        }
+
+                    }
 
                 }
             }
@@ -194,6 +205,27 @@ class HomeFragment : Fragment() {
 
 
 
+    }
+
+    fun showDeleteConfirmationDialog(position : Int,bottomdialog : BottomSheetDialog, onDeleteConfirmed: () -> Unit) {
+        val builder = AlertDialog.Builder(requireContext())
+        builder.setTitle("Delete Item")
+        builder.setMessage("Are you sure you want to delete this item?")
+
+        builder.setPositiveButton("Yes") { dialog, _ ->
+            db.inter().DeleteSave(savelist[position])
+            savelist.removeAt(position)
+            savesAdapter.notifyItemRemoved(position)
+            bottomdialog.dismiss()
+            dialog.dismiss()
+        }
+
+        builder.setNegativeButton("No") { dialog, _ ->
+            dialog.dismiss()
+        }
+
+        val dialog = builder.create()
+        dialog.show()
     }
 
     private fun GetSaves() {

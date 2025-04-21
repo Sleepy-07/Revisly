@@ -20,6 +20,9 @@
         <action
             android:id="@+id/action_postViewFragment_to_fullImageViewFragment2"
             app:destination="@id/fullImageViewFragment2" />
+        <action
+            android:id="@+id/action_postViewFragment_to_openImageFragment"
+            app:destination="@id/openImageFragment" />
     </fragment>
     <fragment
         android:id="@+id/fullViewFragment"
@@ -31,4 +34,9 @@
         android:name="com.example.revisly.Screens.FullImageViewFragment"
         android:label="fragment_full_image_view"
         tools:layout="@layout/fragment_full_image_view" />
+    <fragment
+        android:id="@+id/openImageFragment"
+        android:name="com.example.revisly.Screens.OpenImageFragment"
+        android:label="fragment_open_image"
+        tools:layout="@layout/fragment_open_image" />
 </navigation>

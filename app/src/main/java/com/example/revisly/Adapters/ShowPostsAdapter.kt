@@ -18,6 +18,7 @@ import com.bumptech.glide.request.transition.Transition
 import com.example.revisly.Posts
 import com.example.revisly.R
 import com.bumptech.glide.request.target.CustomTarget
+import com.example.revisly.FlattenedImage
 import com.example.revisly.SavesData
 import me.relex.circleindicator.CircleIndicator3
 import kotlin.math.min
@@ -62,15 +63,35 @@ class ShowPostsAdapter(private val list: List<SavesData>, val click: FullView) :
         // Set up ViewPager2 adapter
         val adapter = ImagePagerAdapter(images) { imagePosition ->
             // Navigate to full screen view
-            val bundle = Bundle().apply {
-                putStringArrayList("images", ArrayList(images))
-                putString("titles", item.title)
-                putString("accountname" , item.account_name)
-                putString("sources", item.platform)
-                putString("sourceUrls", item.url)
-                putInt("position", position)
+            val flattenedList = mutableListOf<FlattenedImage>()
+            list.forEachIndexed { itemIndex, item ->
+                item.images?.forEachIndexed { imageIndex, imageUrl ->
+                    flattenedList.add(
+                        FlattenedImage(
+                            imageUrl = imageUrl,
+                            parentItem = item,
+                            imageIndex = imageIndex,
+                            itemIndex = itemIndex
+                        )
+                    )
+                }
             }
-            holder.itemView.findNavController().navigate(R.id.action_postViewFragment_to_fullImageViewFragment2, bundle)
+
+// Calculate the global index in the flattened list
+            val startIndex = flattenedList.indexOfFirst {
+                it.itemIndex == position && it.imageIndex == imagePosition
+            }
+
+// Pass to the fullscreen fragment
+            val bundle = Bundle().apply {
+                putParcelableArrayList("Savelist", ArrayList(list))
+                putInt("startIndex", position)
+            }
+
+            holder.itemView.findNavController().navigate(
+                R.id.action_postViewFragment_to_openImageFragment, bundle
+            )
+
         }
         holder.viewPager.adapter = adapter
         holder.indicator.setViewPager(holder.viewPager)

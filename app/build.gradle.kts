@@ -2,6 +2,8 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     kotlin("kapt") version "1.5.31"
+    id("kotlin-parcelize")
+
 }
 
 android {
