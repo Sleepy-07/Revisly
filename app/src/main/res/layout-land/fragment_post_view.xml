@@ -3,127 +3,91 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical"
     android:layout_height="match_parent"
+    android:background="@color/white"
     tools:context=".Screens.PostViewFragment">
 
-    <RelativeLayout
+    <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content"
+        android:background="@android:color/transparent"
+        android:elevation="0dp">
 
         <com.google.android.material.chip.ChipGroup
             android:id="@+id/chipGroup2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentTop="true"
-            android:layout_marginStart="0dp"
-            android:layout_marginTop="5dp"
-            android:layout_marginEnd="80dp"
-            app:chipSpacingHorizontal="10dp"
-            app:chipSpacingVertical="10dp"
-            app:selectionRequired="true"
+            android:layout_marginHorizontal="16dp"
+            android:layout_marginTop="8dp"
+            app:chipSpacing="8dp"
             app:singleLine="true"
             app:singleSelection="true">
 
             <com.google.android.material.chip.Chip
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:checked="true"
                 android:text="All"
-                android:textSize="20sp"
-                app:textEndPadding="8dp"
-                app:textStartPadding="8dp" />
+                android:textSize="14sp"
+                app:chipBackgroundColor="@color/itemselected"
+                app:chipStrokeColor="@color/itemselected"
+                app:chipStrokeWidth="1dp"
+                app:rippleColor="@color/white" />
 
             <com.google.android.material.chip.Chip
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:checked="true"
-                android:text="Pintreset"
-                android:textSize="20sp"
-                app:textEndPadding="8dp"
-                app:textStartPadding="8dp" />
+                android:text="Pinterest"
+                android:textSize="14sp"
+                app:chipBackgroundColor="@color/white"
+                app:chipStrokeColor="@color/itemselected"
+                app:chipStrokeWidth="1dp"
+                app:rippleColor="@color/itemselected" />
 
             <com.google.android.material.chip.Chip
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:checked="true"
                 android:text="Instagram"
-                android:textSize="20sp"
-                app:textEndPadding="8dp"
-                app:textStartPadding="8dp" />
+                android:textSize="14sp"
+                app:chipBackgroundColor="@color/white"
+                app:chipStrokeColor="@color/itemselected"
+                app:chipStrokeWidth="1dp"
+                app:rippleColor="@color/itemselected" />
 
             <com.google.android.material.chip.Chip
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:checked="true"
-                android:text="Youtube"
-                android:textSize="20sp"
-                app:textEndPadding="8dp"
-                app:textStartPadding="8dp" />
-
-
-            <com.google.android.material.chip.Chip
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:checked="true"
-                android:text="Pintreset"
-                android:textSize="20sp"
-                app:textEndPadding="8dp"
-                app:textStartPadding="8dp" />
-
-            <com.google.android.material.chip.Chip
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:checked="true"
-                android:text="Instagram"
-                android:textSize="20sp"
-                app:textEndPadding="8dp"
-                app:textStartPadding="8dp" />
-
-            <com.google.android.material.chip.Chip
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:checked="true"
-                android:text="Youtube"
-                android:textSize="20sp"
-                app:textEndPadding="8dp"
-                app:textStartPadding="8dp" />
-
+                android:text="YouTube"
+                android:textSize="14sp"
+                app:chipBackgroundColor="@color/white"
+                app:chipStrokeColor="@color/itemselected"
+                app:chipStrokeWidth="1dp"
+                app:rippleColor="@color/itemselected" />
 
         </com.google.android.material.chip.ChipGroup>
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/ShowImages"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_below="@+id/chipGroup2"
+    </com.google.android.material.appbar.AppBarLayout>
 
-            android:layout_marginEnd="80dp"
-            tools:listitem="@layout/activity_share" />
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/ShowImages"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:clipToPadding="false"
+        android:paddingTop="8dp"
+        android:paddingBottom="80dp"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        tools:listitem="@layout/activity_share" />
 
-
-    </RelativeLayout>
-
-
-
-
-
-
-
-
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
+    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
         android:id="@+id/AddSave"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
-        android:layout_marginBottom="20dp"
-        android:layout_marginEnd="16dp"
-        android:src="@android:drawable/ic_input_add"
+        android:layout_margin="16dp"
+        android:text="Add Save"
+        android:textColor="@color/white"
         app:backgroundTint="@color/itemselected"
-        app:fabSize="normal"
-        app:maxImageSize="40dp"
-        app:tint="@color/ivorywhite" />
-
+        app:icon="@android:drawable/ic_input_add"
+        app:iconTint="@color/white"
+        app:rippleColor="@color/white" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

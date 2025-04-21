@@ -158,18 +158,18 @@ class HomeFragment : Fragment() {
 
 
 
-        binding.MyPins.setOnClickListener {
+        binding.MyPins?.setOnClickListener {
             binding.TestPin.visibility = View.VISIBLE
-            binding.MyPins.setBackgroundResource(R.drawable.selecetd_layout)
-            binding.MyArchived.setBackgroundResource(R.drawable.unselecetd_layout)
+            binding.MyPins?.setBackgroundResource(R.drawable.selecetd_layout)
+            binding.MyArchived?.setBackgroundResource(R.drawable.unselecetd_layout)
 
 
 
         }
-        binding.MyArchived.setOnClickListener {
+        binding.MyArchived?.setOnClickListener {
             binding.TestPin.visibility = View.GONE
-            binding.MyArchived.setBackgroundResource(R.drawable.selecetd_layout)
-            binding.MyPins.setBackgroundResource(R.drawable.unselecetd_layout)
+            binding.MyArchived?.setBackgroundResource(R.drawable.selecetd_layout)
+            binding.MyPins?.setBackgroundResource(R.drawable.unselecetd_layout)
         }
 
 

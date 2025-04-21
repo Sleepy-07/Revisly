@@ -4,11 +4,13 @@ import android.content.res.Configuration
 import android.graphics.Bitmap
 import android.graphics.Matrix
 import android.graphics.drawable.Drawable
+import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import androidx.navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
 import com.bumptech.glide.Glide
@@ -20,10 +22,11 @@ import com.example.revisly.SavesData
 import me.relex.circleindicator.CircleIndicator3
 import kotlin.math.min
 
-class ShowPostsAdapter(private val list: List<SavesData>, val click : FullView) : RecyclerView.Adapter<ShowPostsAdapter.ViewHolder>() {
+class ShowPostsAdapter(private val list: List<SavesData>, val click: FullView) : RecyclerView.Adapter<ShowPostsAdapter.ViewHolder>() {
 
     lateinit var viewPagerAdapter: ViewPagerAdapter
     var mainposition: Int = 0
+
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val viewPager: ViewPager2 = view.findViewById(R.id.ImageSet)
         val indicator: CircleIndicator3 = view.findViewById(R.id.indicator)
@@ -38,20 +41,8 @@ class ShowPostsAdapter(private val list: List<SavesData>, val click : FullView) 
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = list[position]
-
-
         val images = reconstructUrls(item.images)
-        mainposition= position
-
-//        holder.itemView.setOnClickListener {
-//            Log.e("itemclicked", "onBindViewHolder: $mainposition ", )
-//            click.openFullView(mainposition)
-//        }
-
-
-
-
-
+        mainposition = position
 
         // Entrance animation (only once per item)
         if (!animatedPositions.contains(position)) {
@@ -69,28 +60,34 @@ class ShowPostsAdapter(private val list: List<SavesData>, val click : FullView) 
         }
 
         // Set up ViewPager2 adapter
-        val adapter = ImagePagerAdapter(images){imageposition ->
-            click.openFullView(position, imageposition)
-
+        val adapter = ImagePagerAdapter(images) { imagePosition ->
+            // Navigate to full screen view
+            val bundle = Bundle().apply {
+                putStringArrayList("images", ArrayList(images))
+                putString("titles", item.title)
+                putString("accountname" , item.account_name)
+                putString("sources", item.platform)
+                putString("sourceUrls", item.url)
+                putInt("position", position)
+            }
+            holder.itemView.findNavController().navigate(R.id.action_postViewFragment_to_fullImageViewFragment2, bundle)
         }
         holder.viewPager.adapter = adapter
         holder.indicator.setViewPager(holder.viewPager)
 
-        if ( images.size == 1 ){
+        if (images.size == 1) {
             holder.indicator.visibility = View.GONE
         }
-
-
 
         // Detect orientation
         val orientation = holder.itemView.resources.configuration.orientation
 
-        // Set ViewPager2 height based on first image (you might want to improve this)
+        // Set ViewPager2 height based on first image
         if (images.isNotEmpty()) {
             Glide.with(holder.itemView.context)
                 .asBitmap()
                 .load(images[0])
-                .into(object : com.bumptech.glide.request.target.CustomTarget<Bitmap>() {
+                .into(object : CustomTarget<Bitmap>() {
                     override fun onResourceReady(resource: Bitmap, transition: com.bumptech.glide.request.transition.Transition<in Bitmap>?) {
                         val originalWidth = resource.width
                         val originalHeight = resource.height
@@ -128,7 +125,6 @@ class ShowPostsAdapter(private val list: List<SavesData>, val click : FullView) 
                     onImageClick(adapterPosition)
                 }
             }
-
         }
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ImageViewHolder {
@@ -138,18 +134,12 @@ class ShowPostsAdapter(private val list: List<SavesData>, val click : FullView) 
 
         override fun onBindViewHolder(holder: ImageViewHolder, position: Int) {
             val imageUrl = images[position]
-
-//            holder.itemView.setOnClickListener {
-//                Log.e("itemclicked", "onBindViewHolder: $mainposition ", )
-//                click.openFullView(mainposition)
-//            }
-            // Set scaleType to MATRIX for custom transformation
             holder.imageView.scaleType = ImageView.ScaleType.MATRIX
 
             Glide.with(holder.itemView.context)
                 .asBitmap()
                 .load(imageUrl)
-                .into(object : com.bumptech.glide.request.target.CustomTarget<Bitmap>() {
+                .into(object : CustomTarget<Bitmap>() {
                     override fun onResourceReady(resource: Bitmap, transition: com.bumptech.glide.request.transition.Transition<in Bitmap>?) {
                         val originalWidth = resource.width
                         val originalHeight = resource.height
@@ -175,9 +165,7 @@ class ShowPostsAdapter(private val list: List<SavesData>, val click : FullView) 
 
     interface FullView {
         fun openFullView(postPosition: Int, imagePosition: Int)
-
     }
-
 
     fun reconstructUrls(rawItems: List<Any?>?): List<String> {
         if (rawItems == null) return emptyList()
@@ -205,7 +193,4 @@ class ShowPostsAdapter(private val list: List<SavesData>, val click : FullView) 
 
         return urls
     }
-
-
-
 }

@@ -45,7 +45,7 @@ interface Inter {
     @Query("Select * from SavesData where type in ('Post','Pin','carousel')" )
     fun GetSavePost() : List<SavesData>
 
-    @Query("Select * from SavesData where platform = :filter")
+    @Query("Select * from SavesData where platform = :filter and type in ('Post','Pin','carousel')" )
     fun GetSaveFilter(filter : String) : List<SavesData>
 
     @Insert

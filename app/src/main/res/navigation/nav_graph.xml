@@ -17,10 +17,18 @@
         <action
             android:id="@+id/action_postViewFragment_to_fullViewFragment"
             app:destination="@id/fullViewFragment" />
+        <action
+            android:id="@+id/action_postViewFragment_to_fullImageViewFragment2"
+            app:destination="@id/fullImageViewFragment2" />
     </fragment>
     <fragment
         android:id="@+id/fullViewFragment"
         android:name="com.example.revisly.Screens.FullViewFragment"
         android:label="fragment_full_view"
         tools:layout="@layout/fragment_full_view" />
+    <fragment
+        android:id="@+id/fullImageViewFragment2"
+        android:name="com.example.revisly.Screens.FullImageViewFragment"
+        android:label="fragment_full_image_view"
+        tools:layout="@layout/fragment_full_image_view" />
 </navigation>

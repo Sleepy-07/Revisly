@@ -5,7 +5,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 object RetrofitClient {
     private val retrofit = Retrofit.Builder()
-        .baseUrl("https://universal-scraper-1-5mjh.onrender.com")
+        .baseUrl("https://universal-scraper-2.onrender.com")
         .addConverterFactory(GsonConverterFactory.create())
         .build()
 
