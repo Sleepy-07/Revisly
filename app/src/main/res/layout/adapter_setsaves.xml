@@ -108,7 +108,8 @@
                 android:textSize="12sp" />
 
             <ImageView
-                android:id="@+id/SaveShare"
+                android:id="@+id/SaveMenu"
+
                 android:layout_width="32dp"
                 android:layout_height="32dp"
                 android:layout_below="@+id/ThumbCard"
@@ -120,11 +121,12 @@
                 android:layout_width="32dp"
                 android:layout_height="32dp"
                 android:layout_below="@+id/ThumbCard"
-                android:id="@+id/SaveMenu"
+                android:id="@+id/SaveShare"
+
 
                 android:layout_marginTop="10dp"
                 android:layout_marginEnd="12dp"
-                android:layout_toStartOf="@+id/SaveShare"
+                android:layout_toStartOf="@+id/SaveMenu"
                 android:src="@drawable/ic_share" />
 
             <ImageView
@@ -135,7 +137,7 @@
 
                 android:layout_marginTop="10dp"
                 android:layout_marginEnd="12dp"
-                android:layout_toStartOf="@+id/SaveMenu"
+                android:layout_toStartOf="@+id/SaveShare"
                 android:src="@drawable/ic_favorite" />
 
 

@@ -134,6 +134,25 @@ class HomeFragment : Fragment() {
 
             }
 
+            override fun toggelmore(postion: Int) {
+                val dailog = BottomSheetDialog(requireContext())
+                dailog.setContentView(R.layout.bottom_extra_function)
+                dailog.show()
+                dailog.apply {
+                    val item = savelist[postion]
+                    val img = findViewById<ImageView>(R.id.SaveThumbnailsExtra)
+                    val title = findViewById<TextView>(R.id.SaveTextExtra)
+
+                    Glide.with(requireContext())
+                        .load(item.images?.get(0))
+                        .centerCrop()
+                        .into(img!!)
+
+                    title?.text = item.title
+
+                }
+            }
+
         })
 
 

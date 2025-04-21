@@ -13,5 +13,14 @@
         android:id="@+id/postViewFragment"
         android:name="com.example.revisly.Screens.PostViewFragment"
         android:label="fragment_post_view"
-        tools:layout="@layout/fragment_post_view" />
+        tools:layout="@layout/fragment_post_view" >
+        <action
+            android:id="@+id/action_postViewFragment_to_fullViewFragment"
+            app:destination="@id/fullViewFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/fullViewFragment"
+        android:name="com.example.revisly.Screens.FullViewFragment"
+        android:label="fragment_full_view"
+        tools:layout="@layout/fragment_full_view" />
 </navigation>

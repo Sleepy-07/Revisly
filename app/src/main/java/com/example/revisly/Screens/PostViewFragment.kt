@@ -14,7 +14,9 @@ import android.widget.Toast
 import androidx.appcompat.app.ActionBar
 import androidx.core.content.ContextCompat
 import androidx.core.view.isEmpty
+import androidx.fragment.app.commit
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import androidx.room.Dao
@@ -69,9 +71,6 @@ class PostViewFragment : Fragment() {
         Platform("Flipkart",R.drawable.flipkart),
         Platform("Playstore",R.drawable.playstore),
         Platform("Steam",R.drawable.steam),
-
-
-
         )
 
     private var platformname: String = ""
@@ -100,14 +99,30 @@ class PostViewFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         db= Data.getInstance(requireContext())
 
-        postsAdapter = ShowPostsAdapter(postslist)
-//        binding.ShowImages.layoutManager = StaggeredGridLayoutManager(
-//            2, StaggeredGridLayoutManager.VERTICAL
-//        ).apply {
-//            gapStrategy = StaggeredGridLayoutManager.GAP_HANDLING_MOVE_ITEMS_BETWEEN_SPANS
-//        }
-//        binding.ShowImages.adapter = postsAdapter
-//        binding.ShowImages.itemAnimator = DefaultItemAnimator()
+        postsAdapter = ShowPostsAdapter(postslist, object : ShowPostsAdapter.FullView{
+            override fun openFullView(postPosition: Int, imagePosition: Int) {
+
+                Log.e("come here", "openFullView: ", )
+                // Get the images from the clicked post
+                val images = reconstructUrls(imagelist)
+
+                // Create a bundle with the data
+                val bundle = Bundle().apply {
+                    putStringArrayList("images", ArrayList(images))
+                    putInt("postPosition", postPosition)
+                    putInt("imagePosition", imagePosition)
+                }
+
+                // Navigate to FullscreenFragment
+                findNavController().navigate(R.id.action_postViewFragment_to_fullViewFragment,bundle)
+            }
+
+
+
+
+
+        })
+
 
         val layoutManager = StaggeredGridLayoutManager(3, StaggeredGridLayoutManager.VERTICAL)
         layoutManager.gapStrategy = StaggeredGridLayoutManager.GAP_HANDLING_MOVE_ITEMS_BETWEEN_SPANS
@@ -457,10 +472,39 @@ private fun GetPost() {
                 }
             }
     }
-}
+
 
 private fun PostViewFragment.GetFilterSaves(string: String) {
     postslist.clear()
     postslist.addAll(db.inter().GetSaveFilter(string))
+
     postsAdapter.notifyDataSetChanged()
+
+    }
+fun reconstructUrls(rawItems: List<Any?>?): List<String> {
+    if (rawItems == null) return emptyList()
+
+    val rawString = rawItems.joinToString(",") { it.toString().trim() }
+    val parts = rawString.split(",")
+    val urls = mutableListOf<String>()
+    var currentUrl = ""
+
+    for (part in parts) {
+        val trimmed = part.trim()
+        if (trimmed.startsWith("https://")) {
+            if (currentUrl.isNotEmpty()) {
+                urls.add(currentUrl)
+            }
+            currentUrl = trimmed
+        } else {
+            currentUrl += ",$trimmed"
+        }
+    }
+
+    if (currentUrl.isNotEmpty()) {
+        urls.add(currentUrl)
+    }
+
+    return urls
+}
 }

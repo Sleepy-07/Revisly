@@ -28,6 +28,7 @@ class SavesAdapter(val list : MutableList<SavesData>, val click : OnClik) : Recy
         val thumbnail = view.findViewById<ImageView>(R.id.SaveThumbnails)
 
         val fav = view.findViewById<ImageView>(R.id.SaveFav)
+        val more = view.findViewById<ImageView>(R.id.SaveMenu)
 
 
 
@@ -37,6 +38,7 @@ class SavesAdapter(val list : MutableList<SavesData>, val click : OnClik) : Recy
 
     interface OnClik {
             fun toggelfav(postion : Int,img : ImageView)
+             fun toggelmore(postion: Int)
 
     }
 
@@ -76,6 +78,10 @@ class SavesAdapter(val list : MutableList<SavesData>, val click : OnClik) : Recy
 
             fav.setOnClickListener {
                 click.toggelfav(position,fav)
+            }
+
+            more.setOnClickListener {
+                click.toggelmore(position)
             }
 
             holder.itemView.setOnClickListener {

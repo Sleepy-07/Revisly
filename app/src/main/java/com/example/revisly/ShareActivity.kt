@@ -98,7 +98,7 @@ class ShareActivity : AppCompatActivity() {
 
 
         var url = intent.getStringExtra(Intent.EXTRA_TEXT) ?: ""
-//        url = extractFirstUrl(url).toString()
+        url = extractFirstUrl(url).toString()
 
 
         GetItems(url)
@@ -107,20 +107,7 @@ class ShareActivity : AppCompatActivity() {
 
 
 
-
-
         binding.apply {
-
-
-
-//            if(SaveNote.text.toString().isEmpty()){
-//                btnsave.visibility = View.GONE
-//            }
-//            else{
-//                btnsave.visibility = View.VISIBLE
-//
-//            }
-
 
         btnsave.setOnClickListener {
                 finish()
@@ -208,17 +195,12 @@ class ShareActivity : AppCompatActivity() {
                 )
 
                 val is_valid = db.inter().InsertSave(newItem)
-
-                if(!is_valid){
-                    Toast.makeText(this@ShareActivity, "This Pin is Already Exist", Toast.LENGTH_SHORT).show()
-                    finish()
-                }
-
+                Toast.makeText(this@ShareActivity, "Data is added", Toast.LENGTH_SHORT).show()
+                Log.e("Data is added ", "OpenSaveLink:  $data", )
 
                 btnsave.setOnClickListener {
 
-                    Toast.makeText(this@ShareActivity, "Data is added", Toast.LENGTH_SHORT).show()
-                    Log.e("Data is added ", "OpenSaveLink:  $data", )
+
                     finish()
 
                 }

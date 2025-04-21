@@ -1,0 +1,217 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:padding="16dp"
+    android:background="@drawable/round_corner"
+    android:backgroundTint="@color/thumcard"
+    android:layout_height="470dp">
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="10dp"
+            android:id="@+id/SaveTextExtra"
+            android:textColor="@color/black"
+            android:fontFamily="serif"
+            android:maxLines="5"
+            android:layout_toStartOf="@+id/ThumbCard"
+            android:layout_weight="1" />
+
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="115dp"
+            android:layout_weight="1"
+            android:layout_height="90dp"
+            android:layout_alignParentEnd="true"
+            app:cardCornerRadius="8dp"
+            android:id="@+id/ThumbCard"
+            android:elevation="0dp">
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+
+            android:background="@color/thumcard"
+            android:scaleType="centerCrop"
+            android:id="@+id/SaveThumbnailsExtra"/>
+        </androidx.cardview.widget.CardView>
+
+
+
+
+    </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:layout_marginHorizontal="16dp"
+        android:layout_marginVertical="7dp"
+        android:background="@drawable/round_corner"
+        android:backgroundTint="@color/itemselected"/>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:id="@+id/EnterNote"
+        android:padding="5dp"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_note"
+            app:tint="@color/iconcolre"
+
+            />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingStart="16dp"
+            android:text="Enter Note"
+            android:textColor="@color/black"
+            android:fontFamily="serif"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="5dp"
+        android:gravity="center_vertical"
+        android:id="@+id/EnterTags"
+        android:layout_marginTop="10dp"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            app:tint="@color/iconcolre"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_tags"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingStart="16dp"
+            android:text="Enter Tags"
+            android:textColor="@color/black"
+
+            android:fontFamily="serif"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="5dp"
+        android:gravity="center_vertical"
+        android:id="@+id/Viewd"
+        android:layout_marginTop="10dp"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            app:tint="@color/iconcolre"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_view"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingStart="16dp"
+            android:id="@+id/isViewd"
+            android:text="Marked as Viewed"
+            android:textColor="@color/black"
+            android:fontFamily="serif"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="5dp"
+        android:gravity="center_vertical"
+        android:id="@+id/Favorite"
+        android:layout_marginTop="10dp"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:tint="@color/iconcolre"
+            android:id="@+id/isfavorite"
+            android:src="@drawable/ic_favorite"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingStart="16dp"
+            android:text="Marked Favorite"
+            android:textColor="@color/black"
+            android:fontFamily="serif"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="5dp"
+        android:gravity="center_vertical"
+        android:id="@+id/isArchived"
+        android:layout_marginTop="10dp"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            app:tint="@color/iconcolre"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_archived"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingStart="16dp"
+            android:id="@+id/Archivedtext"
+            android:text="Marked Archived"
+            android:textColor="@color/black"
+            android:fontFamily="serif"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="5dp"
+        android:gravity="center_vertical"
+        android:id="@+id/DeleteSave"
+        android:layout_marginTop="10dp"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            app:tint="@color/iconcolre"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_delete"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingStart="16dp"
+            android:text="Delete"
+            android:textColor="@color/black"
+            android:fontFamily="serif"/>
+
+    </LinearLayout>
+
+
+</LinearLayout>

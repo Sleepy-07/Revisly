@@ -4,23 +4,29 @@ import android.content.res.Configuration
 import android.graphics.Bitmap
 import android.graphics.Matrix
 import android.graphics.drawable.Drawable
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.recyclerview.widget.RecyclerView
+import androidx.viewpager2.widget.ViewPager2
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.transition.Transition
 import com.example.revisly.Posts
 import com.example.revisly.R
 import com.bumptech.glide.request.target.CustomTarget
 import com.example.revisly.SavesData
+import me.relex.circleindicator.CircleIndicator3
 import kotlin.math.min
 
-class ShowPostsAdapter(private val list: List<SavesData>) : RecyclerView.Adapter<ShowPostsAdapter.ViewHolder>() {
+class ShowPostsAdapter(private val list: List<SavesData>, val click : FullView) : RecyclerView.Adapter<ShowPostsAdapter.ViewHolder>() {
 
+    lateinit var viewPagerAdapter: ViewPagerAdapter
+    var mainposition: Int = 0
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        val img: ImageView = view.findViewById(R.id.ImageSet)
+        val viewPager: ViewPager2 = view.findViewById(R.id.ImageSet)
+        val indicator: CircleIndicator3 = view.findViewById(R.id.indicator)
     }
 
     private val animatedPositions = mutableSetOf<Int>()
@@ -32,6 +38,20 @@ class ShowPostsAdapter(private val list: List<SavesData>) : RecyclerView.Adapter
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = list[position]
+
+
+        val images = reconstructUrls(item.images)
+        mainposition= position
+
+//        holder.itemView.setOnClickListener {
+//            Log.e("itemclicked", "onBindViewHolder: $mainposition ", )
+//            click.openFullView(mainposition)
+//        }
+
+
+
+
+
 
         // Entrance animation (only once per item)
         if (!animatedPositions.contains(position)) {
@@ -48,47 +68,144 @@ class ShowPostsAdapter(private val list: List<SavesData>) : RecyclerView.Adapter
             holder.itemView.translationY = 0f
         }
 
+        // Set up ViewPager2 adapter
+        val adapter = ImagePagerAdapter(images){imageposition ->
+            click.openFullView(position, imageposition)
+
+        }
+        holder.viewPager.adapter = adapter
+        holder.indicator.setViewPager(holder.viewPager)
+
+        if ( images.size == 1 ){
+            holder.indicator.visibility = View.GONE
+        }
+
+
+
         // Detect orientation
         val orientation = holder.itemView.resources.configuration.orientation
 
-        // Set scaleType to MATRIX for custom transformation
-        holder.img.scaleType = ImageView.ScaleType.MATRIX
+        // Set ViewPager2 height based on first image (you might want to improve this)
+        if (images.isNotEmpty()) {
+            Glide.with(holder.itemView.context)
+                .asBitmap()
+                .load(images[0])
+                .into(object : com.bumptech.glide.request.target.CustomTarget<Bitmap>() {
+                    override fun onResourceReady(resource: Bitmap, transition: com.bumptech.glide.request.transition.Transition<in Bitmap>?) {
+                        val originalWidth = resource.width
+                        val originalHeight = resource.height
 
-        Glide.with(holder.itemView.context)
-            .asBitmap()
-            .load(item.images?.get(0))
-            .into(object : CustomTarget<Bitmap>() {
-                override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
-                    val originalWidth = resource.width
-                    val originalHeight = resource.height
+                        val imageViewWidth = holder.viewPager.width.takeIf { it > 0 }
+                            ?: (holder.viewPager.resources.displayMetrics.widthPixels / 3)
 
-                    val imageViewWidth = holder.img.width.takeIf { it > 0 }
-                        ?: (holder.img.resources.displayMetrics.widthPixels / 3)
+                        val aspectRatio = originalHeight.toFloat() / originalWidth
+                        var targetHeight = (imageViewWidth * aspectRatio).toInt()
 
-                    val aspectRatio = originalHeight.toFloat() / originalWidth
-                    var targetHeight = (imageViewWidth * aspectRatio).toInt()
+                        // Apply max height based on orientation
+                        val maxHeight = if (orientation == Configuration.ORIENTATION_PORTRAIT) 1000 else 800
+                        targetHeight = min(targetHeight, maxHeight)
 
-                    // Apply max height based on orientation
-                    val maxHeight = if (orientation == Configuration.ORIENTATION_PORTRAIT) 1000 else 800
-                    targetHeight = min(targetHeight, maxHeight)
+                        holder.viewPager.layoutParams.height = targetHeight
+                        holder.viewPager.requestLayout()
+                    }
 
-                    holder.img.layoutParams.height = targetHeight
-                    holder.img.requestLayout()
-
-                    // Apply Top-Crop Transformation
-                    val matrix = Matrix()
-                    val scale = imageViewWidth.toFloat() / originalWidth
-                    matrix.setScale(scale, scale) // Scale to fit width
-                    holder.img.imageMatrix = matrix
-
-                    holder.img.setImageBitmap(resource)
-                }
-
-                override fun onLoadCleared(placeholder: Drawable?) {}
-            })
+                    override fun onLoadCleared(placeholder: android.graphics.drawable.Drawable?) {}
+                })
+        }
     }
 
     override fun getItemCount(): Int = list.size
 
     override fun getItemViewType(position: Int): Int = position
+
+    // Inner adapter for ViewPager2
+    private inner class ImagePagerAdapter(private val images: List<String>, private val onImageClick: (Int) -> Unit) : RecyclerView.Adapter<ImagePagerAdapter.ImageViewHolder>() {
+
+        inner class ImageViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+            val imageView: ImageView = view.findViewById(R.id.imageView)
+            init {
+                imageView.setOnClickListener {
+                    onImageClick(adapterPosition)
+                }
+            }
+
+        }
+
+        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ImageViewHolder {
+            val view = LayoutInflater.from(parent.context).inflate(R.layout.item_image, parent, false)
+            return ImageViewHolder(view)
+        }
+
+        override fun onBindViewHolder(holder: ImageViewHolder, position: Int) {
+            val imageUrl = images[position]
+
+//            holder.itemView.setOnClickListener {
+//                Log.e("itemclicked", "onBindViewHolder: $mainposition ", )
+//                click.openFullView(mainposition)
+//            }
+            // Set scaleType to MATRIX for custom transformation
+            holder.imageView.scaleType = ImageView.ScaleType.MATRIX
+
+            Glide.with(holder.itemView.context)
+                .asBitmap()
+                .load(imageUrl)
+                .into(object : com.bumptech.glide.request.target.CustomTarget<Bitmap>() {
+                    override fun onResourceReady(resource: Bitmap, transition: com.bumptech.glide.request.transition.Transition<in Bitmap>?) {
+                        val originalWidth = resource.width
+                        val originalHeight = resource.height
+
+                        val imageViewWidth = holder.imageView.width.takeIf { it > 0 }
+                            ?: (holder.imageView.resources.displayMetrics.widthPixels / 3)
+
+                        val scale = imageViewWidth.toFloat() / originalWidth
+
+                        val matrix = Matrix()
+                        matrix.setScale(scale, scale)
+                        holder.imageView.imageMatrix = matrix
+
+                        holder.imageView.setImageBitmap(resource)
+                    }
+
+                    override fun onLoadCleared(placeholder: android.graphics.drawable.Drawable?) {}
+                })
+        }
+
+        override fun getItemCount(): Int = images.size
+    }
+
+    interface FullView {
+        fun openFullView(postPosition: Int, imagePosition: Int)
+
+    }
+
+
+    fun reconstructUrls(rawItems: List<Any?>?): List<String> {
+        if (rawItems == null) return emptyList()
+
+        val rawString = rawItems.joinToString(",") { it.toString().trim() }
+        val parts = rawString.split(",")
+        val urls = mutableListOf<String>()
+        var currentUrl = ""
+
+        for (part in parts) {
+            val trimmed = part.trim()
+            if (trimmed.startsWith("https://")) {
+                if (currentUrl.isNotEmpty()) {
+                    urls.add(currentUrl)
+                }
+                currentUrl = trimmed
+            } else {
+                currentUrl += ",$trimmed"
+            }
+        }
+
+        if (currentUrl.isNotEmpty()) {
+            urls.add(currentUrl)
+        }
+
+        return urls
+    }
+
+
+
 }
