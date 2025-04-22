@@ -170,6 +170,12 @@ class PostViewFragment : Fragment() {
                         Log.e("ChipSelection", "Youtube selected")
                         GetFilterSaves("youtube")
                     }
+                    R.id.Fav ->{
+                        getFavSaves()
+                    }
+                    R.id.Archived->{
+                        getArcSaves()
+                    }
                 }
             }
         }
@@ -507,4 +513,16 @@ fun reconstructUrls(rawItems: List<Any?>?): List<String> {
 
     return urls
 }
+}
+
+private fun PostViewFragment.getArcSaves() {
+    postslist.clear()
+    postslist.addAll(db.inter().GetArcSave())
+    postsAdapter.notifyDataSetChanged()
+}
+
+private fun PostViewFragment.getFavSaves() {
+    postslist.clear()
+    postslist.addAll(db.inter().GetFavSave())
+    postsAdapter.notifyDataSetChanged()
 }

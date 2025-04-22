@@ -60,6 +60,31 @@
                     app:layout_constraintEnd_toStartOf="@+id/visitSourceButton"
                     app:layout_constraintStart_toStartOf="parent" />
 
+
+                <ImageView
+                    android:id="@+id/PreviousPicture"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:rotation="-90"
+                    android:alpha=".4"
+                    android:src="@drawable/back2"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintVertical_bias="0.5" />
+
+                <ImageView
+                    android:id="@+id/NextPicture"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:rotation="90"
+                    android:alpha=".4"
+                    android:src="@drawable/back2"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintVertical_bias="0.5" />
+
                 <com.google.android.material.floatingactionbutton.FloatingActionButton
                     android:id="@+id/visitSourceButton"
                     android:layout_width="wrap_content"
@@ -80,6 +105,71 @@
         </androidx.cardview.widget.CardView>
 
 
+        <LinearLayout
+            android:id="@+id/linearLayout2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="16dp"
+            android:orientation="horizontal"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/cardView">
+
+            <ImageView
+                android:id="@+id/SaveFav"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:padding="6dp"
+                android:src="@drawable/ic_favorite"
+                app:tint="@color/itemselected" />
+
+            <ImageView
+                android:id="@+id/SaveShare"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_marginStart="8dp"
+                android:padding="6dp"
+                android:src="@drawable/ic_share"
+                app:tint="@color/itemselected" />
+
+            <ImageView
+                android:id="@+id/SaveTags"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_marginStart="8dp"
+                android:padding="6dp"
+                android:src="@drawable/ic_tags"
+                app:tint="@color/itemselected" />
+
+            <ImageView
+                android:id="@+id/SaveNote"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_marginStart="8dp"
+                android:padding="6dp"
+                android:src="@drawable/ic_note"
+                app:tint="@color/itemselected" />
+
+            <ImageView
+                android:id="@+id/SaveArchived"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_marginStart="8dp"
+                android:padding="6dp"
+                android:src="@drawable/ic_archived"
+                app:tint="@color/itemselected" />
+
+            <ImageView
+                android:id="@+id/SaveDelete"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_marginStart="8dp"
+                android:padding="6dp"
+                android:src="@drawable/ic_delete"
+                app:tint="@color/itemselected" />
+
+        </LinearLayout>
+
         <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -88,7 +178,7 @@
 
             app:cardElevation="4dp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/cardView"
+            app:layout_constraintTop_toBottomOf="@+id/linearLayout2"
             tools:layout_editor_absoluteX="16dp">
 
             <RelativeLayout
@@ -128,7 +218,7 @@
                     android:textColor="@color/black"
                     android:textSize="18sp"
                     android:textStyle="bold"
-                    android:visibility="gone" />
+                    android:visibility="visible" />
 
                 <TextView
                     android:id="@+id/imageTitle"
@@ -154,16 +244,6 @@
                     android:textColor="@color/coolteal"
                     android:textSize="14sp" />
 
-                <!--                    <com.google.android.material.button.MaterialButton-->
-                <!--                        android:id="@+id/visitSourceButton"-->
-                <!--                        android:layout_width="match_parent"-->
-                <!--                        android:layout_height="wrap_content"-->
-                <!--                        android:layout_below="@+id/imageSource"-->
-                <!--                        android:text="Visit Source"-->
-                <!--                        roun-->
-                <!--                        android:textColor="@color/black"-->
-
-                <!--                        app:backgroundTint="@color/itemselected" />-->
 
             </RelativeLayout>
 

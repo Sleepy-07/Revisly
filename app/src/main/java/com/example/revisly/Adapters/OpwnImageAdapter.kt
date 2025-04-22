@@ -23,7 +23,7 @@ import com.example.revisly.utility.canScrollHorizontallyForward
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import me.relex.circleindicator.CircleIndicator3
 
-class OpenImageAdapter(val list : MutableList<SavesData> ) : RecyclerView.Adapter<OpenImageAdapter.ViewHolder>() {
+class OpenImageAdapter(val list : MutableList<SavesData> , val click : Features) : RecyclerView.Adapter<OpenImageAdapter.ViewHolder>() {
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
@@ -61,28 +61,78 @@ class OpenImageAdapter(val list : MutableList<SavesData> ) : RecyclerView.Adapte
 
 //            indicator.setViewPager(viewpager)
 
-            val imageAdapter = ShowImages(item.images ?: mutableListOf())
+            val images = reconstructUrls(item.images)
+
+            val imageAdapter = ShowImages(images as MutableList<String>?)
             holder.viewpager.adapter = imageAdapter
 
+            val maxsize = (item.images?.size ?: 1)?.minus(1)
 
-            holder.viewpager.setOnTouchListener { _, _ ->
-                val canScroll = holder.viewpager.canScrollHorizontallyForward() || holder.viewpager.canScrollHorizontallyBackward()
-                if (canScroll) {
-                    holder.viewpager.parent?.requestDisallowInterceptTouchEvent(true)
-                }
-                false
+
+
+        next.setOnClickListener {
+            val current = viewpager.currentItem
+            if (current < maxsize!!) {
+                viewpager.setCurrentItem(current + 1, true)
+            }
+        }
+
+        previous.setOnClickListener {
+            val current = viewpager.currentItem
+            if (current > 0) {
+                viewpager.setCurrentItem(current - 1, true)
+            }
+        }
+
+            if(item.account_name == "ideas"){
+                accountname.visibility = View.GONE
             }
 
+            source.text = item.platform
 
             holder.indicator.setViewPager(holder.viewpager)
 
             item.images?.size?.let {
                 if(it <= 1) {
                     holder.indicator.visibility = View.GONE
+                    next.visibility = View.GONE
+                    previous.visibility = View.GONE
                 } else {
                     holder.indicator.visibility = View.VISIBLE
+                    next.visibility = View.VISIBLE
+                    previous.visibility = View.VISIBLE
                 }
             }
+
+            if(item.favoraite){
+                fav.setImageResource(R.drawable.ic_favorite_filled)
+            }
+            else{
+                fav.setImageResource(R.drawable.ic_favorite)
+
+            }
+
+
+            fav.setOnClickListener {
+                click.toggleFaviorite(position,fav)
+            }
+
+            archievd.setOnClickListener {
+                click.toggelarchived(position)
+            }
+
+            delete.setOnClickListener {
+                click.delteitem(position)
+            }
+
+            tags.setOnClickListener {
+                click.entertags(position)
+            }
+            share.setOnClickListener {
+                click.shareitem(position)
+            }
+
+
 
 
 
@@ -103,6 +153,20 @@ class OpenImageAdapter(val list : MutableList<SavesData> ) : RecyclerView.Adapte
         val title : TextView = view.findViewById(R.id.imageTitle)
         val accountname : TextView = view.findViewById(R.id.imageaccount)
         val source : TextView = view.findViewById(R.id.imageSource)
+        val next : ImageView = view.findViewById(R.id.NextPicture)
+        val previous : ImageView = view.findViewById(R.id.PreviousPicture)
+
+
+
+        val fav : ImageView = view.findViewById(R.id.SaveFav)
+        val share : ImageView = view.findViewById(R.id.SaveShare)
+        val tags : ImageView = view.findViewById(R.id.SaveTags)
+        val note : ImageView = view.findViewById(R.id.SaveNote)
+        val archievd : ImageView = view.findViewById(R.id.SaveArchived)
+        val delete : ImageView = view.findViewById(R.id.SaveDelete)
+
+
+
 
 
 
@@ -132,6 +196,8 @@ class OpenImageAdapter(val list : MutableList<SavesData> ) : RecyclerView.Adapte
             val imageUrl = imagelist?.get(position)
 
             Log.d("ShowImages", "Binding image at position $position: ${imageUrl}")
+
+
 
 
             // Load the image using your preferred image loading library (e.g., Glide, Picasso)
@@ -170,12 +236,53 @@ class OpenImageAdapter(val list : MutableList<SavesData> ) : RecyclerView.Adapte
 
         inner class ViewHolder(view : View) : RecyclerView.ViewHolder(view)  {
             val imageView : ImageView = view.findViewById(R.id.fullImageView)
+
             init {
                 imageView.setOnClickListener {
                     // Handle image click
                 }
             }
 
+
         }
     }
+
+
+    fun reconstructUrls(rawItems: List<Any?>?): List<String> {
+        if (rawItems == null) return emptyList()
+
+        val rawString = rawItems.joinToString(",") { it.toString().trim() }
+        val parts = rawString.split(",")
+        val urls = mutableListOf<String>()
+        var currentUrl = ""
+
+        for (part in parts) {
+            val trimmed = part.trim()
+            if (trimmed.startsWith("https://")) {
+                if (currentUrl.isNotEmpty()) {
+                    urls.add(currentUrl)
+                }
+                currentUrl = trimmed
+            } else {
+                currentUrl += ",$trimmed"
+            }
+        }
+
+        if (currentUrl.isNotEmpty()) {
+            urls.add(currentUrl)
+        }
+
+        return urls
+    }
+}
+
+interface Features {
+
+    fun toggleFaviorite(position: Int,img : ImageView)
+    fun delteitem(position: Int)
+    fun shareitem(position: Int)
+    fun entertags(position: Int)
+    fun toggelarchived(position: Int)
+
+
 }

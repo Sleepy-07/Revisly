@@ -189,6 +189,39 @@ class HomeFragment : Fragment() {
         }
 
 
+        binding.chipGroup.setOnCheckedStateChangeListener { group,checkid ->
+
+            if(checkid.isNotEmpty()){
+                val id = checkid[0]
+
+                when(id){
+                    R.id.All ->{
+                        GetSaves()
+                    }
+                    R.id.Fav ->{
+                        getFavSaves()
+                    }
+                    R.id.Pin->{
+                        GetFilterSaves("pinterest") // Make sure this matches your database exactly
+
+                    }
+                    R.id.Insta ->{
+                        Log.e("insta clicked ", "onViewCreated: ", )
+                        GetFilterSaves("instagram")
+                    }
+                    R.id.Yotube ->{
+                        GetFilterSaves("youtube")
+
+
+                    }
+
+                }
+
+
+
+            }
+        }
+
 
 
         val isLandscape = resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
@@ -205,6 +238,21 @@ class HomeFragment : Fragment() {
 
 
 
+    }
+
+
+    private fun HomeFragment.GetFilterSaves(string: String) {
+        savelist.clear()
+        savelist.addAll(db.inter().GetSaveFilterInsta(string))
+
+        savesAdapter.notifyDataSetChanged()
+
+    }
+
+    private fun HomeFragment.getFavSaves() {
+        savelist.clear()
+        savelist.addAll(db.inter().GetFavSave())
+        savesAdapter.notifyDataSetChanged()
     }
 
     fun showDeleteConfirmationDialog(position : Int,bottomdialog : BottomSheetDialog, onDeleteConfirmed: () -> Unit) {

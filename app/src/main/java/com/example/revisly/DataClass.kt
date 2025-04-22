@@ -34,7 +34,7 @@ data class SavesData(
     val viewed : Boolean = false,
     var favoraite : Boolean = false,
     val notes : String? = "",
-    val archived : Boolean = false,
+    var archived : Boolean = false,
     val type : String? = "",
     ) : Parcelable
 

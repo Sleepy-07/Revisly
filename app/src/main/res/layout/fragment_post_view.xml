@@ -36,10 +36,34 @@
                 <com.google.android.material.chip.Chip
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:checked="true"
                     android:checkable="true"
+                    android:checked="true"
                     android:id="@+id/All"
                     android:text="All"
+                    style="@style/Widget.MaterialComponents.Chip.Choice"
+                    android:textSize="20sp"
+                    app:textEndPadding="8dp"
+                    app:textStartPadding="8dp" />
+
+                <com.google.android.material.chip.Chip
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:checkable="true"
+                    android:id="@+id/Fav"
+                    android:text="Fav"
+                    android:drawablePadding="3dp"
+                    style="@style/Widget.MaterialComponents.Chip.Choice"
+                    android:textSize="20sp"
+                    app:textEndPadding="8dp"
+                    app:textStartPadding="8dp" />
+
+                <com.google.android.material.chip.Chip
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:checkable="true"
+                    android:id="@+id/Archived"
+                    android:text="Archived"
+                    android:drawablePadding="3dp"
                     style="@style/Widget.MaterialComponents.Chip.Choice"
                     android:textSize="20sp"
                     app:textEndPadding="8dp"
