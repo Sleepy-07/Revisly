@@ -15,6 +15,7 @@ import com.bumptech.glide.Glide
 import com.example.revisly.Adapters.ShowPostsAdapter.ViewHolder
 import com.example.revisly.R
 import com.example.revisly.SavesData
+import com.google.android.material.card.MaterialCardView
 import kotlin.contracts.contract
 
 class SavesAdapter(val list : MutableList<SavesData>, val click : OnClik) : RecyclerView.Adapter<SavesAdapter.ViewHolder>() {
@@ -29,6 +30,7 @@ class SavesAdapter(val list : MutableList<SavesData>, val click : OnClik) : Recy
 
         val fav = view.findViewById<ImageView>(R.id.SaveFav)
         val more = view.findViewById<ImageView>(R.id.SaveMenu)
+        val card : MaterialCardView = view.findViewById(R.id.DataCard)
 
 
 
@@ -84,7 +86,7 @@ class SavesAdapter(val list : MutableList<SavesData>, val click : OnClik) : Recy
                 click.toggelmore(position)
             }
 
-            holder.itemView.setOnClickListener {
+            card.setOnClickListener {
                 val context = itemView.context
                 val url = item.url
                 if (url.isNotEmpty()) {

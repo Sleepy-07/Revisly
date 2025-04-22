@@ -52,13 +52,10 @@ data class test(
     val thumbnail: String?,
     val title : String?,
     val type : String?,
-    val images : MutableList<String>
+    val images : MutableList<String>?,
     )
 
-data class KeyData(
-    val isget : Boolean,
-    val data : test?
-)
+
 
 
 @Parcelize
@@ -68,3 +65,16 @@ data class FlattenedImage(
     val imageIndex: Int,
     val itemIndex: Int
 ) : Parcelable
+
+data class MetadataExtended(
+    val title: String,
+    val thumbnailUrl: String?,
+    val type: String,
+    val accountName: String
+)
+
+
+data class KeyData(
+    val isget : Boolean,
+    val data : test?
+)

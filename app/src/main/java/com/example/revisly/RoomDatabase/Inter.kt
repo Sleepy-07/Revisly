@@ -53,6 +53,33 @@ interface Inter {
     @Query("Select * from SavesData where favoraite == true " )
     fun GetFavSave() : List<SavesData>
 
+    @Query("""
+    SELECT * FROM SavesData
+    WHERE (:isfav = 0 OR favoraite = 1)
+    AND (
+        :contentType = 'all' 
+        OR (
+            :contentType = 'image' AND type IN ('Post', 'Pin', 'carousel', 'image')
+        ) 
+        OR (
+            :contentType = 'video' AND type IN ('Reel', 'video', 'short', "video.other")
+        )
+    )
+    AND (:source = 'all' OR platform = :source)
+""")
+    fun getFilteredSaves(
+        contentType: String,
+        source: String,
+        isfav: Boolean
+    ): List<SavesData>
+
+
+
+
+
+
+
+
     @Query("Select * from SavesData where archived == true " )
     fun GetArcSave() : List<SavesData>
 

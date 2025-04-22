@@ -18,6 +18,7 @@ import android.widget.Toast
 import androidx.appcompat.app.ActionBar
 import androidx.core.content.ContextCompat
 import androidx.core.view.isEmpty
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
@@ -27,6 +28,7 @@ import com.example.revisly.Platform
 import com.example.revisly.Metadata
 import com.example.revisly.R
 import com.example.revisly.KeyData
+import com.example.revisly.MetadataExtended
 import com.example.revisly.Retrofit.RetrofitClient
 import com.example.revisly.Retrofit.ScrapeResponse
 import com.example.revisly.Retrofit.UrlRequest
@@ -39,6 +41,9 @@ import com.example.revisly.test
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.textfield.TextInputEditText
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import org.jsoup.nodes.Range
@@ -47,6 +52,7 @@ import retrofit2.Callback
 import retrofit2.Response
 import java.io.IOException
 import kotlin.math.log
+import kotlin.text.contains
 import kotlin.text.startsWith
 
 class HomeFragment : Fragment() {
@@ -59,6 +65,10 @@ class HomeFragment : Fragment() {
 //    val postslist = mutableListOf<SavesData>()
 
    val savelist = mutableListOf<SavesData>()
+
+    var isfav = false
+    var isarchived = false
+    var filtertype = "all"
 
     val platformlist = listOf<Platform>(
         Platform("Youtube",R.drawable.youtube),
@@ -197,19 +207,28 @@ class HomeFragment : Fragment() {
                 when(id){
                     R.id.All ->{
                         GetSaves()
+                        filtertype = "all"
+                        isfav = false
                     }
                     R.id.Fav ->{
                         getFavSaves()
+                        isfav = true
                     }
                     R.id.Pin->{
+                        isfav = false
+                        filtertype = "pinterest"
                         GetFilterSaves("pinterest") // Make sure this matches your database exactly
 
                     }
                     R.id.Insta ->{
+                        isfav = false
+                        filtertype = "instagram"
                         Log.e("insta clicked ", "onViewCreated: ", )
                         GetFilterSaves("instagram")
                     }
                     R.id.Yotube ->{
+                        isfav = false
+                        filtertype = "youtube"
                         GetFilterSaves("youtube")
 
 
@@ -235,6 +254,10 @@ class HomeFragment : Fragment() {
         binding.TestPin.adapter = savesAdapter
 
         GetSaves()
+
+        binding.FilterOption?.setOnClickListener {
+            OpenFilterDialog()
+        }
 
 
 
@@ -466,7 +489,31 @@ class HomeFragment : Fragment() {
                         "Enter the URL to get the pin",
                         Toast.LENGTH_SHORT).show()
                 } else {
-                    GetItems(url?.text.toString(), dialog)
+                    if((url?.text.toString().contains("youtube.com") || url?.text.toString().contains("youtu.be")) && !(url?.text.toString().contains("post"))){
+                        viewLifecycleOwner.lifecycleScope.launch {
+
+                            val saveDialog = createSaveDialog(url?.text.toString(), dialog, showProgress = true)
+                            saveDialog.show()
+
+                            val metadata = fetchMetadata(url?.text.toString())
+                            // Safely update UI here
+
+                            Log.e("YotuebData", "OpenUrlDialog:  $metadata", )
+
+                            updateSaveDialog(saveDialog,metadata, url?.text.toString())
+                            return@launch
+
+
+
+                        }
+
+
+
+                    }else{
+                        GetItems(url?.text.toString(), dialog)
+
+                    }
+
                 }
             }
         }
@@ -500,30 +547,64 @@ class HomeFragment : Fragment() {
     }
 
 
-    suspend fun fetchMetadata(url: String): Metadata {
-        Log.e("Documents is here ", "fetchMetadata: ", )
-
+    suspend fun fetchMetadata(url: String): KeyData = withContext(Dispatchers.IO) {
         try {
-            // Fetch the webpage HTML
-            val doc: Document = Jsoup.connect(url).get()
+            val doc: Document = Jsoup.connect(url)
+                .userAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36")
+                .get()
 
-            Log.e("Documents is ", "fetchMetadata: $doc", )
-
-            // Extract Open Graph metadata (og:title, og:image, og:type)
+            // Standard meta tags
             val title = doc.select("meta[property=og:title]").attr("content")
             val thumbnail = doc.select("meta[property=og:image]").attr("content")
             val type = doc.select("meta[property=og:type]").attr("content")
 
-            // If no Open Graph data is found, use the fallback <title> tag
+            // Special handling for YouTube
+            var accountName = if (url.contains("youtube.com") || url.contains("youtu.be")) {
+                // Method 1: Try to get from link element
+                val channelLink = doc.select("link[itemprop=name]").attr("content")
+                if (channelLink.isNotEmpty()) {
+                    channelLink
+                } else {
+                    // Method 2: Try to get from meta tag
+                    val authorMeta = doc.select("meta[itemprop=author]").attr("content")
+                    if (authorMeta.isNotEmpty()) {
+                        authorMeta
+                    } else {
+                        // Method 3: Try to get from channel name link
+                        doc.select("a.yt-simple-endpoint.style-scope.yt-formatted-string")
+                            .first()?.text() ?: "Unknown"
+                    }
+                }
+            } else {
+                // For non-YouTube sites, use standard author meta tag
+                doc.select("meta[name=author]").attr("content").takeIf { it.isNotEmpty() } ?: "Unknown"
+            }
+
             val fallbackTitle = if (title.isEmpty()) doc.title() else title
             val fallbackType = if (type.isEmpty()) "website" else type
+            val item = KeyData(
+                isget = true,
+                data = test(
+                    platform = getAppNameFromUrl(url),
+                    account_name = accountName,
+                    thumbnail = thumbnail,
+                    title = fallbackTitle,
+                    type = "video",
+                    images = mutableListOf(thumbnail)
+                ))
 
-            return Metadata(fallbackTitle, thumbnail.takeIf { it.isNotEmpty() }, fallbackType)
+
+            KeyData(
+                item.isget,
+                item.data
+            )
         } catch (e: IOException) {
             e.printStackTrace()
-            return Metadata("Error", null, "website")
+            KeyData(false, null)
         }
     }
+
+
 
 
     fun getAppNameFromUrl(url: String): String {
@@ -531,22 +612,22 @@ class HomeFragment : Fragment() {
         val host = uri.host ?: return "Unknown"
 
         return when {
-            "youtube.com" in host || "youtu.be" in host -> "YouTube"
-            "instagram.com" in host -> "Instagram"
+            "youtube.com" in host || "youtu.be" in host -> "youtube"
+            "instagram.com" in host -> "instagram"
             "twitter.com" in host || "x.com" in host -> "Twitter"
-            "facebook.com" in host -> "Facebook"
-            "linkedin.com" in host -> "LinkedIn"
-            "pinterest.com" in host || "pin.it" in host -> "Pinterest"
-            "reddit.com" in host -> "Reddit"
-            "spotify.com" in host -> "Spotify"
-            "github.com" in host -> "GitHub"
-            "amazon.com" in host  || "amzn.in" in host-> "Amazon"
-            "flipkart.com" in host -> "Flipkart"
-            "play.google.com" in host -> "Play Store"
-            "steam.com" in host -> "Steam"
-            "t.me" in host || "telegram.org" in host -> "Telegram"
-            "tiktok.com" in host -> "TikTok"
-            "snapchat.com" in host -> "Snapchat"
+            "facebook.com" in host -> "facebook"
+            "linkedin.com" in host -> "linkedin"
+            "pinterest.com" in host || "pin.it" in host -> "pinterest"
+            "reddit.com" in host -> "reddit"
+            "spotify.com" in host -> "spotify"
+            "github.com" in host -> "gitHub"
+            "amazon.com" in host  || "amzn.in" in host-> "amazon"
+            "flipkart.com" in host -> "flipkart"
+            "play.google.com" in host -> "play store"
+            "steam.com" in host -> "steam"
+            "t.me" in host || "telegram.org" in host -> "telegram"
+            "tiktok.com" in host -> "tiktok"
+            "snapchat.com" in host -> "snapchat"
             else -> host.replace("www.", "").split(".")[0].capitalize()
         }
     }
@@ -575,5 +656,37 @@ class HomeFragment : Fragment() {
         return regex.find(text)?.value
     }
 
+}
+
+private fun HomeFragment.OpenFilterDialog() {
+    val dialog = BottomSheetDialog(requireContext())
+    dialog.setContentView(R.layout.bottom_filteroption)
+
+    dialog.show()
+    dialog.apply {
+
+        val images = findViewById<LinearLayout>(R.id.FilterImage)
+        val vicdeos = findViewById<LinearLayout>(R.id.FilterVideos)
+        val all = findViewById<LinearLayout>(R.id.FilterAll)
+
+        images?.setOnClickListener {
+            savelist.clear()
+            savelist.addAll(db.inter().getFilteredSaves("image",filtertype,isfav))
+            savesAdapter.notifyDataSetChanged()
+        }
+        vicdeos?.setOnClickListener {
+            savelist.clear()
+            savelist.addAll(db.inter().getFilteredSaves("video",filtertype,isfav))
+            savesAdapter.notifyDataSetChanged()
+        }
+        all?.setOnClickListener {
+            savelist.clear()
+            savelist.addAll(db.inter().getFilteredSaves("all",filtertype,isfav))
+            savesAdapter.notifyDataSetChanged()
+        }
+
+
+
+    }
 }
 

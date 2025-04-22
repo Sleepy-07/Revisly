@@ -43,109 +43,127 @@
 
         </com.google.android.material.appbar.MaterialToolbar>
 
-        <HorizontalScrollView
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:scrollbars="none"
             >
 
 
+            <HorizontalScrollView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_marginEnd="5dp"
+                android:layout_toStartOf="@+id/FilterOption"
+                android:scrollbars="none">
 
 
+                <com.google.android.material.chip.ChipGroup
+                    android:id="@+id/chipGroup"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="5dp"
+                    android:layout_marginTop="8dp"
+                    app:chipSpacing="8dp"
+                    app:chipSpacingHorizontal="10dp"
+                    app:chipSpacingVertical="10dp"
+                    app:singleLine="true"
+                    app:singleSelection="true"
+                    app:textEndPadding="8dp"
+                    app:textStartPadding="8dp">
 
-        <com.google.android.material.chip.ChipGroup
-            android:id="@+id/chipGroup"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:layout_marginHorizontal="16dp"
-            app:chipSpacing="8dp"
-            app:chipSpacingHorizontal="10dp"
-            app:chipSpacingVertical="10dp"
-            app:singleLine="true"
-            app:textEndPadding="8dp"
-            app:textStartPadding="8dp"
-            app:singleSelection="true">
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/All"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:checkable="true"
+                        android:checked="true"
 
-            <com.google.android.material.chip.Chip
+                        android:text="All"
+                        android:textSize="14sp"
+                        app:checkedIcon="@null"
+                        app:checkedIconVisible="false"
+                        app:chipBackgroundColor="@color/chip_background_selector"
+                        app:chipStrokeColor="@color/itemselected"
+                        app:chipStrokeWidth="1dp"
+                        app:rippleColor="@color/white" />
+
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/Fav"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:checkable="true"
+                        android:text="Favorite"
+                        android:textSize="14sp"
+                        app:checkedIcon="@null"
+                        app:checkedIconVisible="false"
+                        app:chipBackgroundColor="@color/chip_background_selector"
+
+                        app:chipStrokeColor="@color/itemselected"
+                        app:chipStrokeWidth="1dp"
+                        app:rippleColor="@color/itemselected" />
+
+
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/Pin"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:checkable="true"
+                        android:text="Pinterest"
+                        android:textSize="14sp"
+                        app:checkedIcon="@null"
+                        app:checkedIconVisible="false"
+                        app:chipBackgroundColor="@color/chip_background_selector"
+
+                        app:chipStrokeColor="@color/itemselected"
+                        app:chipStrokeWidth="1dp"
+                        app:rippleColor="@color/itemselected" />
+
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/Yotube"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:checkable="true"
+                        android:text="Yotube"
+                        android:textSize="14sp"
+                        app:checkedIcon="@null"
+                        app:checkedIconVisible="false"
+                        app:chipBackgroundColor="@color/chip_background_selector"
+
+                        app:chipStrokeColor="@color/itemselected"
+                        app:chipStrokeWidth="1dp"
+                        app:rippleColor="@color/itemselected" />
+
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/Insta"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:checkable="true"
+                        android:text="Instagram"
+                        android:textSize="14sp"
+                        app:checkedIcon="@null"
+                        app:checkedIconVisible="false"
+                        app:chipBackgroundColor="@color/chip_background_selector"
+
+                        app:chipStrokeColor="@color/itemselected"
+                        app:chipStrokeWidth="1dp"
+                        app:rippleColor="@color/itemselected" />
+
+                </com.google.android.material.chip.ChipGroup>
+
+            </HorizontalScrollView>
+
+            <ImageView
+                android:id="@+id/FilterOption"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="All"
-                android:checkable="true"
-                app:chipBackgroundColor="@color/chip_background_selector"
+                android:layout_centerVertical="true"
+                android:layout_alignParentEnd="true"
+                android:src="@drawable/ic_filter"
+                app:tint="@color/itemselected" />
 
-                android:checked="true"
-                app:checkedIcon="@null"
-                app:checkedIconVisible="false"
-                android:id="@+id/All"
-                android:textSize="14sp"
-                app:chipStrokeColor="@color/itemselected"
-                app:chipStrokeWidth="1dp"
-                app:rippleColor="@color/white" />
+        </RelativeLayout>
 
-            <com.google.android.material.chip.Chip
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Favorite"
-                android:checkable="true"
-                app:chipBackgroundColor="@color/chip_background_selector"
-
-                android:id="@+id/Fav"
-                app:checkedIcon="@null"
-                app:checkedIconVisible="false"
-                android:textSize="14sp"
-                app:chipStrokeColor="@color/itemselected"
-                app:chipStrokeWidth="1dp"
-                app:rippleColor="@color/itemselected" />
-
-            <com.google.android.material.chip.Chip
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Pinterest"
-                android:checkable="true"
-                android:id="@+id/Pin"
-                app:checkedIcon="@null"
-                app:checkedIconVisible="false"
-                android:textSize="14sp"
-                app:chipBackgroundColor="@color/chip_background_selector"
-
-                app:chipStrokeColor="@color/itemselected"
-                app:chipStrokeWidth="1dp"
-                app:rippleColor="@color/itemselected" />
-
-            <com.google.android.material.chip.Chip
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Yotube"
-                android:checkable="true"
-                android:id="@+id/Yotube"
-                app:checkedIcon="@null"
-                app:checkedIconVisible="false"
-                android:textSize="14sp"
-                app:chipBackgroundColor="@color/chip_background_selector"
-
-                app:chipStrokeColor="@color/itemselected"
-                app:chipStrokeWidth="1dp"
-                app:rippleColor="@color/itemselected" />
-
-            <com.google.android.material.chip.Chip
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Instagram"
-                android:textSize="14sp"
-                android:checkable="true"
-                android:id="@+id/Insta"
-                app:checkedIcon="@null"
-                app:checkedIconVisible="false"
-                app:chipBackgroundColor="@color/chip_background_selector"
-
-                app:chipStrokeColor="@color/itemselected"
-                app:chipStrokeWidth="1dp"
-                app:rippleColor="@color/itemselected" />
-
-        </com.google.android.material.chip.ChipGroup>
-
-        </HorizontalScrollView>
 
     </com.google.android.material.appbar.AppBarLayout>
 
