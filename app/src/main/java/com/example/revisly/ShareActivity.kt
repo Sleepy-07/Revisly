@@ -100,28 +100,36 @@ class ShareActivity : AppCompatActivity() {
         var url = intent.getStringExtra(Intent.EXTRA_TEXT) ?: ""
         url = extractFirstUrl(url).toString()
 
-        if((url.contains("youtube.com") || url.contains("youtu.be")) && !url.contains("post")){
+        if((url.contains("youtube.com") || url.contains("youtu.be"))){
 
-            // Show progress immediately when starting the request
-            lifecycleScope.launch {
-
-
-                binding.progressBar.visibility = View.VISIBLE
-                binding.DataCard.visibility = View.GONE
-
-                val metadata = fetchMetadata(url)
-                // Safely update UI here
-
-                Log.e("YotuebData", "OpenUrlDialog:  $metadata",)
-
-                updateSaveDialog(metadata, url)
+            if(url.contains("post")){
+                GetItems(url)
 
             }
+            else{
+                lifecycleScope.launch {
+
+
+                    binding.progressBar.visibility = View.VISIBLE
+                    binding.DataCard.visibility = View.GONE
+
+                    val metadata = fetchMetadata(url)
+                    // Safely update UI here
+
+                    Log.e("YotuebData", "OpenUrlDialog:  $metadata",)
+
+                    updateSaveDialog(metadata, url)
+
+                }
+            }
+
+            // Show progress immediately when starting the request
+
         }else{
             GetItems(url)
 
         }
-            platformname = "Youtube"
+
 
 
 

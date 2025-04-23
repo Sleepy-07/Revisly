@@ -42,7 +42,7 @@ class OpenImageAdapter(val list : MutableList<SavesData> , val click : Features)
 
         holder.apply {
             val item = list[position]
-            accountname.text = item.account_name
+            accountname.text = "@"+item.account_name
             title.text = item.title
             timesavestamp.text = item.timestamp.toString()
 

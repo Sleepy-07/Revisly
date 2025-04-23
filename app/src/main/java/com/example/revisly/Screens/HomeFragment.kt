@@ -489,25 +489,25 @@ class HomeFragment : Fragment() {
                         "Enter the URL to get the pin",
                         Toast.LENGTH_SHORT).show()
                 } else {
-                    if((url?.text.toString().contains("youtube.com") || url?.text.toString().contains("youtu.be")) && !(url?.text.toString().contains("post"))){
-                        viewLifecycleOwner.lifecycleScope.launch {
-
-                            val saveDialog = createSaveDialog(url?.text.toString(), dialog, showProgress = true)
-                            saveDialog.show()
-
-                            val metadata = fetchMetadata(url?.text.toString())
-                            // Safely update UI here
-
-                            Log.e("YotuebData", "OpenUrlDialog:  $metadata", )
-
-                            updateSaveDialog(saveDialog,metadata, url?.text.toString())
-                            return@launch
-
-
-
+                    if((url?.text.toString().contains("youtube.com") || url?.text.toString().contains("youtu.be")) ){
+                        if(url?.text.toString().contains("post")){
+                            GetItems(url?.text.toString(), dialog)
                         }
+                        else{
+
+                            viewLifecycleOwner.lifecycleScope.launch {
+
+                                val saveDialog = createSaveDialog(url?.text.toString(), dialog, showProgress = true)
+                                saveDialog.show()
+                                val metadata = fetchMetadata(url?.text.toString())
+                                // Safely update UI here
+
+                                Log.e("YotuebData", "OpenUrlDialog:  $metadata", )
+                                updateSaveDialog(saveDialog,metadata, url?.text.toString())
 
 
+                            }
+                        }
 
                     }else{
                         GetItems(url?.text.toString(), dialog)
